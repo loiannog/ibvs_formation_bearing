@@ -1,0 +1,22 @@
+<launch>
+ <!-- <group ns="nanoplus">
+    <node pkg="nodelet"
+      type="nodelet"
+      name="image_zeromq_to_ros"
+      args="standalone image_zeromq_to_ros/ImageZeroMQToROS"
+      output="screen">
+      <param name="calibration" value="$(find image_zeromq_to_ros)/config/calib_130.yml"/>
+      <param name="zmq_transport" value="tcp://127.0.0.1:12345"/>
+      <param name="jpeg_decompress" value="true"/>
+      <param name="image_channels" value="1"/>
+    </node>
+  </group>-->
+  <node pkg="nodelet"
+        type="nodelet"
+        name="getCircle"
+        args="standalone circle_detection/getCircle"
+        output="screen">
+    <remap from="~image" to="/nanoplus/image_zeromq_to_ros/image_raw"/>
+    <remap from="~camera_info" to="/image_zeromq_to_ros/camera_info"/>
+  </node>
+</launch>

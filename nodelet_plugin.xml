@@ -1,0 +1,9 @@
+<library path="lib/libcircle_detection">
+  <class name="circle_detection/getCircle"
+         type="getCircle"
+         base_class_type="nodelet::Nodelet">
+    <description>
+      This is an estimator of the position of a cylinder.
+    </description>
+  </class>
+</library>

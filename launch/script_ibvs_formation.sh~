@@ -1,0 +1,6 @@
+#!/bin/sh
+echo "welcome"
+cd /home/giuseppe/bluefox/send_data_camera_jpeg_zmq
+sudo ./sendData
+echo "launching camera publishing and visual algorithm"
+roslaunch ibvs_formation ibvs_formation.launch

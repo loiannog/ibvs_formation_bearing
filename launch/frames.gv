@@ -1,0 +1,13 @@
+digraph G {
+"/camera_link" -> "/world"[label="Broadcaster: /camera_world\nAverage rate: 10.192 Hz\nMost recent transform: -0.079 sec old \nBuffer length: 4.906 sec\n"];
+"/camera_rgb_frame" -> "/camera_rgb_optical_frame"[label="Broadcaster: /camera_base_link3\nAverage rate: 10.192 Hz\nMost recent transform: -0.093 sec old \nBuffer length: 4.906 sec\n"];
+"/camera_link" -> "/camera_rgb_frame"[label="Broadcaster: /camera_base_link1\nAverage rate: 10.196 Hz\nMost recent transform: -0.002 sec old \nBuffer length: 4.806 sec\n"];
+"/camera_link" -> "/camera_depth_frame"[label="Broadcaster: /camera_base_link\nAverage rate: 10.196 Hz\nMost recent transform: -0.002 sec old \nBuffer length: 4.806 sec\n"];
+"/world" -> "/PTAMM_ros"[label="Broadcaster: /PTAMM_ros_KD\nAverage rate: 19.116 Hz\nMost recent transform: 0.039 sec old \nBuffer length: 4.865 sec\n"];
+"/world" -> "/PTAMM_ros_scaled"[label="Broadcaster: /PTAMM_ros_KD\nAverage rate: 19.116 Hz\nMost recent transform: 0.039 sec old \nBuffer length: 4.865 sec\n"];
+"/camera_depth_frame" -> "/camera_depth_optical_frame"[label="Broadcaster: /camera_base_link2\nAverage rate: 10.196 Hz\nMost recent transform: -0.007 sec old \nBuffer length: 4.806 sec\n"];
+edge [style=invis];
+ subgraph cluster_legend { style=bold; color=black; label ="view_frames Result";
+"Recorded at time: 1369331145.481"[ shape=plaintext ] ;
+ }->"/camera_link";
+}
