@@ -22,14 +22,12 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-rosbuild_add_library(lib src/imgproc.cpp)
+#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
 rosbuild_add_library(circle_detection src/get_circle.cpp
                                     src/imgproc.cpp)
 #rosbuild_add_library(conversion /opt/ros/fuerte/stacks/vision_visp/visp_tracker/src/libvisp_tracker/conversion.cpp)
 
 target_link_libraries(circle_detection ${OpenCV_LIBRARIES})
-target_link_libraries(circle_detection lib)
-
 #rosbuild_add_compile_flags(cylinder_detection -Wall -O3 -D__LINUX__ -mfpmath=sse -mmmx -msse -msse2 -msse3 -fexceptions -fopenmp)
 rosbuild_add_link_flags(circle_detection -Wl,--as-needed)

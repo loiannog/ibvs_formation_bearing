@@ -267,13 +267,13 @@ _CATKIN_GTEST_INCLUDE:FILEPATH=_CATKIN_GTEST_INCLUDE-NOTFOUND
 _CATKIN_GTEST_SRC:FILEPATH=/usr/src/gtest/src/gtest.cc
 
 //Path to a file.
-_file_name:FILEPATH=/home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp
+_file_name:FILEPATH=//home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp
 
 //The directory containing a CMake configuration file for catkin.
 catkin_DIR:PATH=/opt/ros/hydro/share/catkin/cmake
 
 //Dependencies for the target
-circle_detection_LIB_DEPENDS:STATIC=general;nodeletlib;general;bondcpp;general;uuid;general;image_transport;general;message_filters;general;tinyxml;general;roscpp;general;:/usr/lib/libboost_signals-mt.so;general;:/usr/lib/libboost_filesystem-mt.so;general;class_loader;general;:/usr/lib/libPocoFoundation.so;general;dl;general;:/opt/ros/hydro/lib/libconsole_bridge.so;general;roslib;general;rosconsole;general;:/usr/lib/libboost_regex-mt.so;general;:/usr/lib/liblog4cxx.so;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;:/usr/lib/libboost_date_time-mt.so;general;:/usr/lib/libboost_system-mt.so;general;:/usr/lib/libboost_thread-mt.so;general;cpp_common;general;visp;general;m;general;pthread;general;opencv_calib3d;general;opencv_contrib;general;opencv_core;general;opencv_features2d;general;opencv_flann;general;opencv_gpu;general;opencv_highgui;general;opencv_imgproc;general;opencv_legacy;general;opencv_ml;general;opencv_nonfree;general;opencv_objdetect;general;opencv_photo;general;opencv_stitching;general;opencv_ts;general;opencv_video;general;opencv_videostab;
+circle_detection_LIB_DEPENDS:STATIC=general;nodeletlib;general;bondcpp;general;uuid;general;image_transport;general;message_filters;general;tinyxml;general;roscpp;general;:/usr/lib/libboost_signals-mt.so;general;:/usr/lib/libboost_filesystem-mt.so;general;class_loader;general;:/usr/lib/libPocoFoundation.so;general;dl;general;:/opt/ros/hydro/lib/libconsole_bridge.so;general;roslib;general;rosconsole;general;:/usr/lib/libboost_regex-mt.so;general;:/usr/lib/liblog4cxx.so;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;:/usr/lib/libboost_date_time-mt.so;general;:/usr/lib/libboost_system-mt.so;general;:/usr/lib/libboost_thread-mt.so;general;cpp_common;general;visp;general;m;general;pthread;general;opencv_calib3d;general;opencv_contrib;general;opencv_core;general;opencv_features2d;general;opencv_flann;general;opencv_gpu;general;opencv_highgui;general;opencv_imgproc;general;opencv_legacy;general;opencv_ml;general;opencv_nonfree;general;opencv_objdetect;general;opencv_photo;general;opencv_stitching;general;opencv_ts;general;opencv_video;general;opencv_videostab;general;lib;
 
 //The directory containing a CMake configuration file for gencpp.
 gencpp_DIR:PATH=/opt/ros/hydro/share/gencpp/cmake
@@ -320,6 +320,9 @@ ibvs_formation_bearing_SOURCE_DIR:STATIC=/home/giuseppe/catkinAIRobotsUnina_ws/s
 
 //Path to a library.
 lib:FILEPATH=/opt/ros/hydro/lib/libroslib.so
+
+//Dependencies for the target
+lib_LIB_DEPENDS:STATIC=general;nodeletlib;general;bondcpp;general;uuid;general;image_transport;general;message_filters;general;tinyxml;general;roscpp;general;:/usr/lib/libboost_signals-mt.so;general;:/usr/lib/libboost_filesystem-mt.so;general;class_loader;general;:/usr/lib/libPocoFoundation.so;general;dl;general;:/opt/ros/hydro/lib/libconsole_bridge.so;general;roslib;general;rosconsole;general;:/usr/lib/libboost_regex-mt.so;general;:/usr/lib/liblog4cxx.so;general;xmlrpcpp;general;roscpp_serialization;general;rostime;general;:/usr/lib/libboost_date_time-mt.so;general;:/usr/lib/libboost_system-mt.so;general;:/usr/lib/libboost_thread-mt.so;general;cpp_common;general;visp;general;m;general;pthread;general;opencv_calib3d;general;opencv_contrib;general;opencv_core;general;opencv_features2d;general;opencv_flann;general;opencv_gpu;general;opencv_highgui;general;opencv_imgproc;general;opencv_legacy;general;opencv_ml;general;opencv_nonfree;general;opencv_objdetect;general;opencv_photo;general;opencv_stitching;general;opencv_ts;general;opencv_video;general;opencv_videostab;
 
 //The directory containing a CMake configuration file for roslib.
 roslib_DIR:PATH=/opt/ros/hydro/share/roslib/cmake

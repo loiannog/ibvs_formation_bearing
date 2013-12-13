@@ -209,6 +209,7 @@ clean: CMakeFiles/_catkin_empty_exported_target.dir/clean
 
 # All Build rule for target.
 CMakeFiles/circle_detection.dir/all: CMakeFiles/rosbuild_precompile.dir/all
+CMakeFiles/circle_detection.dir/all: CMakeFiles/lib.dir/all
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/depend
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles  1 2
@@ -221,7 +222,7 @@ all: CMakeFiles/circle_detection.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/circle_detection.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles 2
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles 3
 	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/circle_detection.dir/all
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles 0
 .PHONY : CMakeFiles/circle_detection.dir/rule
@@ -299,6 +300,41 @@ CMakeFiles/doxygen.dir/clean:
 
 # clean rule for target.
 clean: CMakeFiles/doxygen.dir/clean
+.PHONY : clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/lib.dir
+
+# All Build rule for target.
+CMakeFiles/lib.dir/all: CMakeFiles/rosbuild_precompile.dir/all
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/depend
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/build
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles  6
+	@echo "Built target lib"
+.PHONY : CMakeFiles/lib.dir/all
+
+# Include target in all.
+all: CMakeFiles/lib.dir/all
+.PHONY : all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/lib.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles 1
+	$(MAKE) -f CMakeFiles/Makefile2 CMakeFiles/lib.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles 0
+.PHONY : CMakeFiles/lib.dir/rule
+
+# Convenience name for target.
+lib: CMakeFiles/lib.dir/rule
+.PHONY : lib
+
+# clean rule for target.
+CMakeFiles/lib.dir/clean:
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/clean
+.PHONY : CMakeFiles/lib.dir/clean
+
+# clean rule for target.
+clean: CMakeFiles/lib.dir/clean
 .PHONY : clean
 
 #=============================================================================
@@ -398,8 +434,8 @@ clean: CMakeFiles/rosbuild_premsgsrvgen.dir/clean
 # Target rules for target CMakeFiles/rospack_genmsg.dir
 
 # All Build rule for target.
-CMakeFiles/rospack_genmsg.dir/all: CMakeFiles/ROSBUILD_genmsg_lisp.dir/all
 CMakeFiles/rospack_genmsg.dir/all: CMakeFiles/ROSBUILD_genmsg_cpp.dir/all
+CMakeFiles/rospack_genmsg.dir/all: CMakeFiles/ROSBUILD_genmsg_lisp.dir/all
 	$(MAKE) -f CMakeFiles/rospack_genmsg.dir/build.make CMakeFiles/rospack_genmsg.dir/depend
 	$(MAKE) -f CMakeFiles/rospack_genmsg.dir/build.make CMakeFiles/rospack_genmsg.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles 

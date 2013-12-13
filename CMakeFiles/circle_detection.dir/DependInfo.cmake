@@ -11,4 +11,5 @@ SET(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Targets to which this target links.
 SET(CMAKE_TARGET_LINKED_INFO_FILES
+  "/home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles/lib.dir/DependInfo.cmake"
   )

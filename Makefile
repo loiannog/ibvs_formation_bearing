@@ -241,6 +241,19 @@ doxygen/fast:
 .PHONY : doxygen/fast
 
 #=============================================================================
+# Target rules for targets named lib
+
+# Build rule for target.
+lib: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 lib
+.PHONY : lib
+
+# fast build rule for target.
+lib/fast:
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/build
+.PHONY : lib/fast
+
+#=============================================================================
 # Target rules for targets named rosbuild_clean-test-results
 
 # Build rule for target.
@@ -452,6 +465,7 @@ src/imgproc.o: src/imgproc.cpp.o
 # target to build an object file
 src/imgproc.cpp.o:
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/src/imgproc.cpp.o
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/src/imgproc.cpp.o
 .PHONY : src/imgproc.cpp.o
 
 src/imgproc.i: src/imgproc.cpp.i
@@ -460,6 +474,7 @@ src/imgproc.i: src/imgproc.cpp.i
 # target to preprocess a source file
 src/imgproc.cpp.i:
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/src/imgproc.cpp.i
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/src/imgproc.cpp.i
 .PHONY : src/imgproc.cpp.i
 
 src/imgproc.s: src/imgproc.cpp.s
@@ -468,6 +483,7 @@ src/imgproc.s: src/imgproc.cpp.s
 # target to generate assembly for a file
 src/imgproc.cpp.s:
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/src/imgproc.cpp.s
+	$(MAKE) -f CMakeFiles/lib.dir/build.make CMakeFiles/lib.dir/src/imgproc.cpp.s
 .PHONY : src/imgproc.cpp.s
 
 # Help Target
@@ -488,6 +504,7 @@ help:
 	@echo "... install"
 	@echo "... install/local"
 	@echo "... install/strip"
+	@echo "... lib"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... rosbuild_clean-test-results"

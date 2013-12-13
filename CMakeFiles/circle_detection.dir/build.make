@@ -160,6 +160,7 @@ circle_detection_EXTERNAL_OBJECTS =
 
 lib/libcircle_detection.so: CMakeFiles/circle_detection.dir/src/get_circle.cpp.o
 lib/libcircle_detection.so: CMakeFiles/circle_detection.dir/src/imgproc.cpp.o
+lib/libcircle_detection.so: lib/liblib.so
 lib/libcircle_detection.so: CMakeFiles/circle_detection.dir/build.make
 lib/libcircle_detection.so: CMakeFiles/circle_detection.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking CXX shared library lib/libcircle_detection.so"

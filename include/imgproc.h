@@ -42,7 +42,6 @@ using namespace cv;
 #include <geometry_msgs/Vector3Stamped.h>
 #define pi 3.141592653589
 
-
 class getCircle : public nodelet::Nodelet
 {
  public:
@@ -82,15 +81,9 @@ class getCircle : public nodelet::Nodelet
 
 };
 
-typedef struct _Patch
-{
-  double x1;
-  double y1;
-  double x2;
-  double y2;
-  double orientation;
-  ros::Time time_computation;
-}Patch;
 
-Patch imgproc(cv::Mat &img, getCircle* obj_ptr);
+Mat Erosion(const Mat& src);
+Mat Dilation(const Mat& src);
+Mat FilterColors(const Mat& src);
+Mat getColor(cv::Mat &srcBGR);
 #endif

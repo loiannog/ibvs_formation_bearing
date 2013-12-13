@@ -1,0 +1,4 @@
+lib/
+*.bag
+.cproject
+.project

@@ -8,6 +8,7 @@
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles/doxygen.dir
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/gtest/CMakeFiles/gtest.dir
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/gtest/CMakeFiles/gtest_main.dir
+/home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles/lib.dir
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles/rosbuild_clean-test-results.dir
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles/rosbuild_precompile.dir
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles/rosbuild_premsgsrvgen.dir
