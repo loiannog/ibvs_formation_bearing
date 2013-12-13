@@ -11,6 +11,20 @@ SET(CMAKE_FORCE_UNIX_PATHS 1)
 # The C and CXX include file search paths:
 SET(CMAKE_C_INCLUDE_PATH
   "include"
+  "/home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/vision_visp/visp/install/include"
+  "/usr/include/OGRE"
+  "/usr/include/OIS"
+  "/usr/include/libxml2"
+  "/opt/ros/hydro/include/opencv"
+  "/opt/ros/hydro/include"
+  "/usr/include/gtk-2.0"
+  "/usr/include/glib-2.0"
+  "/usr/lib/x86_64-linux-gnu/glib-2.0/include"
+  "/usr/include/pango-1.0"
+  "/usr/include/atk-1.0"
+  "/usr/lib/x86_64-linux-gnu/gtk-2.0/include"
+  "/usr/include/cairo"
+  "/usr/include/gdk-pixbuf-2.0"
   "/usr/src/gtest/include"
   "/usr/src/gtest"
   )

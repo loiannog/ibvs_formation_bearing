@@ -32,14 +32,6 @@ iostream
 pluginlib/class_list_macros.h
 -
 
-/home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp
-imgproc.h
-/home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.h
-algorithm
--
-cstdio
--
-
 /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/vision_visp/visp/install/include/visp/vp1394TwoGrabber.h
 visp/vpConfig.h
 -
