@@ -60,7 +60,7 @@ Mat getColor(cv::Mat &srcBGR)
   mask = Erosion(mask);
   mask = Dilation(mask);
   medianBlur(mask, mask, 11);//smooth the image
-  GaussianBlur(mask, mask, Size(11,11), 0);//smooth the image
+  //GaussianBlur(mask, mask, Size(11,11), 0);//smooth the image
 
   return mask;
 }

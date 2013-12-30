@@ -18,7 +18,7 @@ using namespace std;
 void getCircle::onInit(void)
 {
   ros::NodeHandle priv_nh(getPrivateNodeHandle());
-  std::string path_file;
+  string path_file;
   //priv_nh.param<string>("path_file", path_file, "/home/prisma-airobots/AIRobots_Unina_workspace/AIRobots_UNINA/vision_perching/");
     priv_nh.param<int>("image_threshold", image_threshold, 240);//Surface of a dot to search in an area.
     priv_nh.param<double>("opt_sizePrecision", opt_sizePrecision, 0.25);
@@ -85,41 +85,11 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     GaussianBlur(src, src, Size(5,5), 0);//smooth the image
     getColor_from_img = getColor(src);//get the color red
 
-
-    //Apply the Hough Transform to find the circles
-    vector<Vec3f> circles;
-    //parameters for the Hough transform
-    int dp = 2;
-    int params1 = 100;
-    int params2 = 40;
-    int minRadius = 10;
-    int maxRadius = 140;
+    // Two methods for finding circle/ellipse
     Mat threshold_output;
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
-    //first method circle detection
-    HoughCircles( getColor_from_img, circles, CV_HOUGH_GRADIENT, dp, getColor_from_img.rows/4, params1, params2, minRadius, maxRadius );
-    //plot frequenxy of the detection and circles information
 
-       cout<<"number of circles:"<<circles.size()<<endl;
-       if(circles.size()>1){
-       cout<<"radius:"<<circles[0][2]<<endl;
-       cout<<"center::"<<circles[0][0]<<" "<<circles[0][1]<<endl;
-       }
-       //Draw the circles detected
-        for( size_t i = 0; i < circles.size(); i++ )
-        {
-       	 //circle drawing parameters
-       	 int thickness = -1;
-       	 int lineType = 8;
-       	 int shift = 0;
-            Point center(circles[i][0], circles[i][1]);//center of the circle
-            double radius = circles[i][2];//radius of the circle
-            // circle center
-            circle( src, center, 3, Scalar(255, 0, 0), thickness, lineType, shift );//draw center
-            // circle outline
-            circle( src, center, radius, Scalar(255, 100, 50), thickness+2, lineType, shift );//draw the boundary
-         }
        double secs = ros::Time::now().toSec();
 
         Mat contour_img;
@@ -127,58 +97,43 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
         //second ellipse fitting
     findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
     vector<RotatedRect> minEllipse( contours.size() );
+
     for( int i = 0; i < contours.size(); i++ )
        {
          if( contours[i].size() > 5 )
            {
-        	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
+        	      	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
+
            }
        }
 
     /// Draw contours + rotated rects + ellipses
     int threshold_width_ellipse = 20;
+    RotatedRect tempEllip;
+    float ellipse_major, ellipse_minor, ellipse_angle;
+    Point2f ellipse_center, ellipse_top, ellipse_side;
     for( int i = 0; i< contours.size() && minEllipse[i].size.width>threshold_width_ellipse; i++ )
        {
-         Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-         ellipse( src, minEllipse[i], color, 2, 8 );//draw ellipse
+    	tempEllip = minEllipse[i];
+         Scalar color = Scalar(0,0,255);
+         ellipse( src, tempEllip, color, 2, 8 );//draw ellipse
+
+         // Extract ellipse information
+         ellipse_major = tempEllip.size.height/2;
+         ellipse_minor = tempEllip.size.width/2;
+         ellipse_angle = tempEllip.angle;
+         ellipse_center = tempEllip.center;
+         // Draw axes
+         ellipse_top.x = -ellipse_major * sin(ellipse_angle) + ellipse_center.x;
+         ellipse_top.y = ellipse_major * cos(ellipse_angle) + ellipse_center.y;
+         ellipse_side.x = ellipse_minor * cos(ellipse_angle) + ellipse_center.x;
+         ellipse_side.y = ellipse_minor * sin(ellipse_angle) + ellipse_center.y;
+         line(src, ellipse_center, ellipse_side, Scalar(255,255,255),2);
+         line(src, ellipse_center, ellipse_top, Scalar(0,0,0),2);
 
        }
     cout<<"Frequency [Hz]:"<<1/(ros::Time::now().toSec() - secs)<<endl;
-     /*
-     //method based on contour detection
-     Mat contour_img;
-     contour_img = getColor_from_img.clone();//copy the image
 
-     findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-
-
-     int thresh = 100;
-     int max_thresh = 255;
-     RNG rng(12345);
-
-     /// Approximate contours to polygons + get bounding rects and circles
-     vector<vector<Point> > contours_poly( contours.size() );
-     vector<Rect> boundRect( contours.size() );
-     vector<Point2f>center_c( contours.size() );
-     vector<float>radius_c( contours.size() );
-
-
-     for( int i = 0; i < contours.size(); i++ )
-           { approxPolyDP( Mat(contours[i]), contours_poly[i], 0.1, true );
-             //boundRect[i] = boundingRect( Mat(contours_poly[i]) );
-             //minEnclosingCircle( (Mat)contours_poly[i], center_c[i], radius_c[i] );
-           }
-     /// Draw polygonal contour + bonding rects + circles
-     Mat drawing = Mat::zeros( src.size(), CV_8UC3 );
-     for( int i = 0; i< contours.size(); i++ )
-        {
-          Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-          drawContours( drawing, contours_poly, i, color, 1, 8, vector<Vec4i>(), 0, Point() );
-          //rectangle( drawing, boundRect[i].tl(), boundRect[i].br(), color, 2, 8, 0 );
-          //circle( drawing, center_c[i], (int)radius_c[i], color, 2, 8, 0 );
-        }
-
-*/
      //Show your results
      #ifdef show_images
      namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
