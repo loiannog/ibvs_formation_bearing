@@ -14,7 +14,7 @@
   <depend package="geometry_msgs"/>
   <depend package="sensor_msgs"/>
   <!--<depend package="common_rosdeps"/>-->
-    <depend package="visp"/>
+ <!--   <depend package="visp"/>-->
 <!--     <depend package="visp_tracker"/>-->
        <depend package="opencv2"/>
   <rosdep name="opencv"/>

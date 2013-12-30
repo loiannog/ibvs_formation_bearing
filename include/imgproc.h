@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "opencv2/core/core.hpp"
-#include <visp/vpConfig.h>
+/*#include <visp/vpConfig.h>
 #include <visp/vpImage.h>
 #include <visp/vpMeEllipse.h>
 #include <visp/vpOpenCVGrabber.h>
@@ -22,7 +22,7 @@
 #include <visp/vpMbEdgeTracker.h>
 #include <visp/vpImageConvert.h>
 #include <visp/vpNurbs.h>
-#include <visp/vpMeNurbs.h>
+#include <visp/vpMeNurbs.h>*/
 using namespace std;
 #include <math.h>
 #include "opencv2/imgproc/imgproc.hpp"

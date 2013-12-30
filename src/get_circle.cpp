@@ -9,6 +9,7 @@
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
+#include <opencv2/nonfree/features2d.hpp>
 #define show_images
 // Set dot characteristics for the auto detection
 
