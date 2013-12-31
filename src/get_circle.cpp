@@ -85,16 +85,20 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     GaussianBlur(src, src, Size(5,5), 0);//smooth the image
     getColor_from_img = getColor(src);//get the color red
 
-    // Two methods for finding circle/ellipse
+    // How big of an image is it?
+    cout << "Height: " << src.rows << endl;
+
+    // For timing
+    double secs = ros::Time::now().toSec();
+    // Extract contours
     Mat threshold_output;
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
+    Mat contour_img;
+    contour_img = getColor_from_img.clone();//copy the image
+    float max_width = 0; // size of largest contour in vector
+    int index_of_max = -1; // index in contours of largest ellipse
 
-       double secs = ros::Time::now().toSec();
-
-        Mat contour_img;
-        contour_img = getColor_from_img.clone();//copy the image
-        //second ellipse fitting
     findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
     vector<RotatedRect> minEllipse( contours.size() );
 
@@ -103,73 +107,50 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
          if( contours[i].size() > 5 )
            {
         	      	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
+        	      	 // Find largest ellipse--can impose other size constraints here
+        	      	 if( minEllipse[i].size.width > max_width)
+        	      	 {
+        	      		 // Could store ellipse directly, but will use index for now
+        	      		 index_of_max = i;
+        	      		 max_width = minEllipse[i].size.width;
+        	      	 }
 
            }
        }
+    if( index_of_max >= 0) // Will be -1 of no ellipses were stored
+    {
+		// Grab biggest ellipse
+		RotatedRect maxEllipse = minEllipse[index_of_max];
+		// Ellipse properties
+		Point2f ellipse_top, ellipse_side;
+		float ellipse_major = maxEllipse.size.height/2;
+		float ellipse_minor = maxEllipse.size.width/2;
+		float ellipse_angle = maxEllipse.angle;
+		Point2f ellipse_center = maxEllipse.center;
+		// Get extreme points on ellipse (account for rotation)
+		ellipse_top.x = -ellipse_major * sin(ellipse_angle) + ellipse_center.x;
+		ellipse_top.y = ellipse_major * cos(ellipse_angle) + ellipse_center.y;
+		ellipse_side.x = ellipse_minor * cos(ellipse_angle) + ellipse_center.x;
+		ellipse_side.y = ellipse_minor * sin(ellipse_angle) + ellipse_center.y;
+		// Draw the ellipse
+		ellipse( src, maxEllipse, Scalar(0,0,255), 2, 8);
+		// Draw axes
+		line(src, ellipse_center, ellipse_side, Scalar(255,255,255),2);
+		line(src, ellipse_center, ellipse_top, Scalar(0,0,0),2);
+    }
 
-    /// Draw contours + rotated rects + ellipses
-    int threshold_width_ellipse = 20;
-    RotatedRect tempEllip;
-    float ellipse_major, ellipse_minor, ellipse_angle;
-    Point2f ellipse_center, ellipse_top, ellipse_side;
-    for( int i = 0; i< contours.size() && minEllipse[i].size.width>threshold_width_ellipse; i++ )
-       {
-    	tempEllip = minEllipse[i];
-         Scalar color = Scalar(0,0,255);
-         ellipse( src, tempEllip, color, 2, 8 );//draw ellipse
-
-         // Extract ellipse information
-         ellipse_major = tempEllip.size.height/2;
-         ellipse_minor = tempEllip.size.width/2;
-         ellipse_angle = tempEllip.angle;
-         ellipse_center = tempEllip.center;
-         // Draw axes
-         ellipse_top.x = -ellipse_major * sin(ellipse_angle) + ellipse_center.x;
-         ellipse_top.y = ellipse_major * cos(ellipse_angle) + ellipse_center.y;
-         ellipse_side.x = ellipse_minor * cos(ellipse_angle) + ellipse_center.x;
-         ellipse_side.y = ellipse_minor * sin(ellipse_angle) + ellipse_center.y;
-         line(src, ellipse_center, ellipse_side, Scalar(255,255,255),2);
-         line(src, ellipse_center, ellipse_top, Scalar(0,0,0),2);
-
-       }
     cout<<"Frequency [Hz]:"<<1/(ros::Time::now().toSec() - secs)<<endl;
 
      //Show your results
      #ifdef show_images
-     namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Color Extraction", getColor_from_img);
-     namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
-     imshow( "Ellipse Fitting", src );
-     namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Contours", contour_img);
-     cv::waitKey(1);
+		 namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
+		 cv::imshow("Color Extraction", getColor_from_img);
+		 namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
+		 imshow( "Ellipse Fitting", src );
+		 namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+		 cv::imshow("Contours", contour_img);
+		 cv::waitKey(1);
 	 #endif
-
-
-
-
-/*
-    myBlobDetector.detect(getColor_from_img, myBlobs);
-    cout<<"number of detected blobs:"<<myBlobs.size()<<endl;
-    cv::Mat blobImg;
-    for( size_t i = 0; i < myBlobs.size(); i++ )
-    {
-   	 //circle drawing parameters
-   	 int thickness = -1;
-   	 int lineType = 8;
-   	 int shift = 0;
-        Point center_blob(cvRound(myBlobs[i].pt.x), cvRound(myBlobs[i].pt.y));
-        //double radius_blob = myBlobs[i].size;
-        // circle center
-        circle( src, center_blob, 20, Scalar(240, 150, 50), thickness, lineType, shift );
-     }
-    //cv::drawKeypoints(src, myBlobs, blobImg);
-    //cv::imshow("layer", imgThresh);
-    cv::imshow("Blobs", src);
-    cv::waitKey(1);*/
-   //cout<<"Frequency [Hz]:"<<1/(ros::Time::now().toSec() - secs)<<endl;
-  //geometry_msgs::Vector3Stamped::Ptr pos(new geometry_msgs::Vector3Stamped);
-
 
 }
 
