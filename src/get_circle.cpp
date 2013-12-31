@@ -10,6 +10,8 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <iostream>
 #include <opencv2/nonfree/features2d.hpp>
+#include <std_msgs/builtin_float.h>
+
 #define show_images
 // Set dot characteristics for the auto detection
 
@@ -40,7 +42,7 @@ void getCircle::onInit(void)
 	priv_nh.param<double>("d2", d2, -6.1e-05);//Surface of a dot to search in an area.
 	priv_nh.param<double>("d3", d3, -0.002139);//Surface of a dot to search in an area.
     image_transport::ImageTransport it(priv_nh);
-	cout<<image_threshold<<endl;
+	//cout<<image_threshold<<endl;
 	//cvNamedWindow("thresholded");
 	/*cvNamedWindow("Original image");
 
@@ -79,14 +81,11 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
   cv::Mat src(cv::Size(img->width, img->height), CV_8UC3,
               const_cast<uchar*>(&img->data[0]), img->step);//3 channels image
 
-   //Patch patch = imgproc(mvbegin, this);
+    //Patch patch = imgproc(mvbegin, this);
     Mat imgThresh;
     Mat getColor_from_img;
     GaussianBlur(src, src, Size(5,5), 0);//smooth the image
     getColor_from_img = getColor(src);//get the color red
-
-    // How big of an image is it?
-    cout << "Height: " << src.rows << endl;
 
     // For timing
     double secs = ros::Time::now().toSec();
@@ -96,49 +95,53 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     vector<Vec4i> hierarchy;
     Mat contour_img;
     contour_img = getColor_from_img.clone();//copy the image
-    float max_width = 0; // size of largest contour in vector
-    int index_of_max = -1; // index in contours of largest ellipse
 
     findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
     vector<RotatedRect> minEllipse( contours.size() );
+    RotatedRect potentialEllipse;
+    int j = 0; // indexes minEllipse vector
+    int minHeight = 15; // pixels
 
     for( int i = 0; i < contours.size(); i++ )
        {
          if( contours[i].size() > 5 )
            {
-        	      	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
-        	      	 // Find largest ellipse--can impose other size constraints here
-        	      	 if( minEllipse[i].size.width > max_width)
+        	      	 potentialEllipse = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
+        	      	 if(potentialEllipse.size.height > minHeight)
         	      	 {
-        	      		 // Could store ellipse directly, but will use index for now
-        	      		 index_of_max = i;
-        	      		 max_width = minEllipse[i].size.width;
+        	      		 minEllipse[j] = potentialEllipse;
+        	      		 j++;
         	      	 }
-
            }
        }
-    if( index_of_max >= 0) // Will be -1 of no ellipses were stored
+
+    float distanceEst = -1;
+    for( int i = 0; i < minEllipse.size(); i++)
     {
 		// Grab biggest ellipse
-		RotatedRect maxEllipse = minEllipse[index_of_max];
+		RotatedRect curEllipse = minEllipse[i];
 		// Ellipse properties
 		Point2f ellipse_top, ellipse_side;
-		float ellipse_major = maxEllipse.size.height/2;
-		float ellipse_minor = maxEllipse.size.width/2;
-		float ellipse_angle = maxEllipse.angle;
-		Point2f ellipse_center = maxEllipse.center;
+		float ellipse_major = curEllipse.size.height/2;
+		float ellipse_angle = curEllipse.angle * 3.141592653589793 / 180.0; // radians
+		Point2f ellipse_center = curEllipse.center;
 		// Get extreme points on ellipse (account for rotation)
 		ellipse_top.x = -ellipse_major * sin(ellipse_angle) + ellipse_center.x;
 		ellipse_top.y = ellipse_major * cos(ellipse_angle) + ellipse_center.y;
-		ellipse_side.x = ellipse_minor * cos(ellipse_angle) + ellipse_center.x;
-		ellipse_side.y = ellipse_minor * sin(ellipse_angle) + ellipse_center.y;
+		// Make distance estimate
+		distanceEst = ellipse_major;
 		// Draw the ellipse
-		ellipse( src, maxEllipse, Scalar(0,0,255), 2, 8);
-		// Draw axes
-		line(src, ellipse_center, ellipse_side, Scalar(255,255,255),2);
-		line(src, ellipse_center, ellipse_top, Scalar(0,0,0),2);
+		ellipse( src, curEllipse, Scalar(0,0,255), 2, 8);
+		// Draw axis
+		line(src, ellipse_center, ellipse_top, Scalar(255,255,255),2);
     }
-
+/*
+    // Publish
+    ros::NodeHandle n;
+    ros::Publisher broadcastDist = n.advertise<std_msgs::Float32>("distance", 1000);
+    broadcastDist.publish(distanceEst);
+    ros::spinOnce(); // precautionary
+*/
     cout<<"Frequency [Hz]:"<<1/(ros::Time::now().toSec() - secs)<<endl;
 
      //Show your results
