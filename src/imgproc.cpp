@@ -89,5 +89,35 @@ Mat FilterColors(const Mat& src)
     return imG;
 }
 
+// Randomly select 5 indeics
+void get_5_random_num(int max_num, int* rand_num)
+{
+  int rand_index = 0;
+  int r;
+  int i;
+  bool is_new = 1;
+
+  if (max_num == 4) {
+    for (i = 0; i < 5; i++) {
+      rand_num[i] = i;
+    }
+    return;
+  }
+
+  while (rand_index < 5) {
+    is_new = 1;
+    r = (int)((rand()*1.0/RAND_MAX) * max_num);
+    for (i = 0; i < rand_index; i++) {
+      if (r == rand_num[i]) {
+        is_new = 0;
+        break;
+      }
+    }
+    if (is_new) {
+      rand_num[rand_index] = r;
+      rand_index++;
+    }
+  }
+}
 
 

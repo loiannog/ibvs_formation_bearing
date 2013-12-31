@@ -86,4 +86,5 @@ Mat Erosion(const Mat& src);
 Mat Dilation(const Mat& src);
 Mat FilterColors(const Mat& src);
 Mat getColor(cv::Mat &srcBGR);
+void get_5_random_num(int max_num, int* rand_num);
 #endif
