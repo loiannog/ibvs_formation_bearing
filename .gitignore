@@ -2,4 +2,7 @@ lib/
 *.bag
 .cproject
 .project
+*.o
+*.log
+*~
 CMakeCache.txt
