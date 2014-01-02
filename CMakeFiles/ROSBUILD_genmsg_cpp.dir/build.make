@@ -42,9 +42,45 @@ CMAKE_BINARY_DIR = /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_work
 # Include the progress variables for this target.
 include CMakeFiles/ROSBUILD_genmsg_cpp.dir/progress.make
 
-CMakeFiles/ROSBUILD_genmsg_cpp:
+CMakeFiles/ROSBUILD_genmsg_cpp: msg_gen/cpp/include/ibvs_formation_bearing/bearing.h
+
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: msg/bearing.msg
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/roscpp/rosbuild/scripts/genmsg_cpp.py
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/roslib/cmake/../../../lib/roslib/gendeps
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: manifest.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/cpp_common/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/rostime/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/roscpp_traits/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/roscpp_serialization/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/genmsg/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/genpy/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/message_runtime/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/rosconsole/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/std_msgs/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/rosgraph_msgs/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/xmlrpcpp/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/roscpp/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/bond/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/smclib/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/bondcpp/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/catkin/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/console_bridge/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/class_loader/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/rospack/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/roslib/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/pluginlib/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/nodelet/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/message_filters/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/geometry_msgs/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/sensor_msgs/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/image_transport/package.xml
+msg_gen/cpp/include/ibvs_formation_bearing/bearing.h: /opt/ros/hydro/share/opencv2/package.xml
+	$(CMAKE_COMMAND) -E cmake_progress_report /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --blue --bold "Generating msg_gen/cpp/include/ibvs_formation_bearing/bearing.h"
+	/opt/ros/hydro/share/roscpp/rosbuild/scripts/genmsg_cpp.py /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/msg/bearing.msg
 
 ROSBUILD_genmsg_cpp: CMakeFiles/ROSBUILD_genmsg_cpp
+ROSBUILD_genmsg_cpp: msg_gen/cpp/include/ibvs_formation_bearing/bearing.h
 ROSBUILD_genmsg_cpp: CMakeFiles/ROSBUILD_genmsg_cpp.dir/build.make
 .PHONY : ROSBUILD_genmsg_cpp
 

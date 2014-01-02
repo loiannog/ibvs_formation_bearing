@@ -1,4 +1,7 @@
 FILE(REMOVE_RECURSE
+  "msg_gen"
+  "msg_gen"
+  "src/ibvs_formation_bearing/msg"
   "CMakeFiles/ROSBUILD_gensrv_lisp"
 )
 

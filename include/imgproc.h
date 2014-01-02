@@ -3,26 +3,7 @@
 
 #include <iostream>
 #include "opencv2/core/core.hpp"
-#include <visp/vpConfig.h>
-#include <visp/vpImage.h>
-#include <visp/vpMeEllipse.h>
-#include <visp/vpOpenCVGrabber.h>
-#include <visp/vpDisplayOpenCV.h>
-#include <visp/vpDisplayGDI.h>
-#include <visp/vpDisplayX.h>
-#include <visp/vpConfig.h>
-#include <visp/vpImage.h>
-#include <visp/vpDot.h>
-#include <visp/vpDot2.h>
-#include <visp/vpOpenCVGrabber.h>
-#include <visp/vpDisplayOpenCV.h>
-#include <visp/vpDisplayGDI.h>
-#include <visp/vpDisplayX.h>
-#include <visp/vpImage.h>
-#include <visp/vpMbEdgeTracker.h>
-#include <visp/vpImageConvert.h>
-#include <visp/vpNurbs.h>
-#include <visp/vpMeNurbs.h>
+#include "opencv2/features2d/features2d.hpp"
 using namespace std;
 #include <math.h>
 #include "opencv2/imgproc/imgproc.hpp"
@@ -40,22 +21,15 @@ using namespace cv;
 #include <iostream>
 #include <geometry_msgs/Vector3.h>
 #include <geometry_msgs/Vector3Stamped.h>
+#include <ibvs_formation_bearing/bearing.h>
+#include <boost/thread.hpp>
+#include <boost/date_time.hpp>
+
 #define pi 3.141592653589
 
 class getCircle : public nodelet::Nodelet
 {
  public:
-	  int image_threshold;
-	  double opt_sizePrecision;
-	  double opt_grayLevelPrecision;
-	  double opt_ellipsoidShapePrecision;
-	  int height_min;
-	  int height_max;
-	  int width_min;
-	  int width_max;
-	  int GrayLevelMin;
-	  int GrayLevelMax;
-	  int Surface;
 	  double fx;
 	  double fy;
 	  double cx;
@@ -64,9 +38,10 @@ class getCircle : public nodelet::Nodelet
 	  double d1;
 	  double d2;
 	  double d3;
+	  int RANSAC_iterations;
 	  image_transport::Publisher image_thresholded_pub_;
-	  ros::Publisher cylinder_pos_pub_;
-
+	  ros::Publisher ellipse_pos_pub_;
+      ibvs_formation_bearing::bearing ellipse_direction;
 
  private:
   void onInit(void);
@@ -81,10 +56,13 @@ class getCircle : public nodelet::Nodelet
 
 };
 
-
+void get_5_random_num(int max_num, int* rand_num);
 Mat Erosion(const Mat& src);
 Mat Dilation(const Mat& src);
 Mat FilterColors(const Mat& src);
 Mat getColor(cv::Mat &srcBGR);
-void get_5_random_num(int max_num, int* rand_num);
+
+void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
+
+
 #endif

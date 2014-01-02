@@ -76,18 +76,17 @@ CMakeFiles/circle_detection.dir/src/get_circle.cpp.o: /opt/ros/hydro/share/geome
 CMakeFiles/circle_detection.dir/src/get_circle.cpp.o: /opt/ros/hydro/share/sensor_msgs/package.xml
 CMakeFiles/circle_detection.dir/src/get_circle.cpp.o: /opt/ros/hydro/share/image_transport/package.xml
 CMakeFiles/circle_detection.dir/src/get_circle.cpp.o: /opt/ros/hydro/share/opencv2/package.xml
-CMakeFiles/circle_detection.dir/src/get_circle.cpp.o: /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/vision_visp/visp/manifest.xml
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/circle_detection.dir/src/get_circle.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -fopenmp -DUNIX -DBOOST_ALL_NO_LIB -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/circle_detection.dir/src/get_circle.cpp.o -c /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/get_circle.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/circle_detection.dir/src/get_circle.cpp.o -c /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/get_circle.cpp
 
 CMakeFiles/circle_detection.dir/src/get_circle.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/circle_detection.dir/src/get_circle.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -fopenmp -DUNIX -DBOOST_ALL_NO_LIB -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/get_circle.cpp > CMakeFiles/circle_detection.dir/src/get_circle.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/get_circle.cpp > CMakeFiles/circle_detection.dir/src/get_circle.cpp.i
 
 CMakeFiles/circle_detection.dir/src/get_circle.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/circle_detection.dir/src/get_circle.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -fopenmp -DUNIX -DBOOST_ALL_NO_LIB -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/get_circle.cpp -o CMakeFiles/circle_detection.dir/src/get_circle.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/get_circle.cpp -o CMakeFiles/circle_detection.dir/src/get_circle.cpp.s
 
 CMakeFiles/circle_detection.dir/src/get_circle.cpp.o.requires:
 .PHONY : CMakeFiles/circle_detection.dir/src/get_circle.cpp.o.requires
@@ -128,18 +127,17 @@ CMakeFiles/circle_detection.dir/src/imgproc.cpp.o: /opt/ros/hydro/share/geometry
 CMakeFiles/circle_detection.dir/src/imgproc.cpp.o: /opt/ros/hydro/share/sensor_msgs/package.xml
 CMakeFiles/circle_detection.dir/src/imgproc.cpp.o: /opt/ros/hydro/share/image_transport/package.xml
 CMakeFiles/circle_detection.dir/src/imgproc.cpp.o: /opt/ros/hydro/share/opencv2/package.xml
-CMakeFiles/circle_detection.dir/src/imgproc.cpp.o: /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/vision_visp/visp/manifest.xml
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building CXX object CMakeFiles/circle_detection.dir/src/imgproc.cpp.o"
-	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -fopenmp -DUNIX -DBOOST_ALL_NO_LIB -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/circle_detection.dir/src/imgproc.cpp.o -c /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp
+	/usr/bin/c++   $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -o CMakeFiles/circle_detection.dir/src/imgproc.cpp.o -c /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp
 
 CMakeFiles/circle_detection.dir/src/imgproc.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/circle_detection.dir/src/imgproc.cpp.i"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -fopenmp -DUNIX -DBOOST_ALL_NO_LIB -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp > CMakeFiles/circle_detection.dir/src/imgproc.cpp.i
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -E /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp > CMakeFiles/circle_detection.dir/src/imgproc.cpp.i
 
 CMakeFiles/circle_detection.dir/src/imgproc.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/circle_detection.dir/src/imgproc.cpp.s"
-	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -fopenmp -DUNIX -DBOOST_ALL_NO_LIB -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp -o CMakeFiles/circle_detection.dir/src/imgproc.cpp.s
+	/usr/bin/c++  $(CXX_DEFINES) $(CXX_FLAGS) -W -Wall -Wno-unused-parameter -fno-strict-aliasing -pthread -S /home/giuseppe/catkinAIRobotsUnina_ws/src/AIRobots_Unina_workspace/ibvs_formation_bearing/src/imgproc.cpp -o CMakeFiles/circle_detection.dir/src/imgproc.cpp.s
 
 CMakeFiles/circle_detection.dir/src/imgproc.cpp.o.requires:
 .PHONY : CMakeFiles/circle_detection.dir/src/imgproc.cpp.o.requires

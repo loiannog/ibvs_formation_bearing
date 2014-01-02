@@ -16,6 +16,7 @@
         name="getCircle"
         args="standalone circle_detection/getCircle"
         output="screen">
+         <rosparam file="$(find ibvs_formation_bearing)/Params.yaml"/>
     <remap from="~image" to="/nanoplus/image_zeromq_to_ros/image_raw"/>
     <remap from="~camera_info" to="/image_zeromq_to_ros/camera_info"/>
   </node>

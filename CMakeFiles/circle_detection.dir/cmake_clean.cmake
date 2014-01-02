@@ -1,4 +1,7 @@
 FILE(REMOVE_RECURSE
+  "msg_gen"
+  "msg_gen"
+  "src/ibvs_formation_bearing/msg"
   "CMakeFiles/circle_detection.dir/src/get_circle.cpp.o"
   "CMakeFiles/circle_detection.dir/src/imgproc.cpp.o"
   "lib/libcircle_detection.pdb"
