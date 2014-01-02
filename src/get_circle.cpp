@@ -12,7 +12,7 @@
 #include <math.h>
 #include <iostream>
 
-//#define show_images
+#define show_images
 #define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
@@ -112,11 +112,11 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     undistortPoints(P, dst_P, cM, Dl);
     Point2f diff_dstP = dst_P[2] - dst_P[1];
     double norm_dstP = sqrt(pow(diff_dstP.x,2) + pow(diff_dstP.y,2));
-    double ellipse_direction_scale = norm_dstP/0.015;
-    ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)*ellipse_direction_scale;
-    ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)*ellipse_direction_scale;
-    ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)*ellipse_direction_scale;
-    //cout<<"position_z:"<<ellipse_direction.z*ellipse_direction.scale<<endl;
+    double ellipse_direction_scale = norm_dstP/0.15;
+    ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+    ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+    ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+    cout<<"position_z:"<<ellipse_direction.vector<<endl;
     ellipse_pos_pub_.publish(ellipse_direction);
     // Draw contours + rect + ellipse
     for( int i = 0; i< 1; i++ )
