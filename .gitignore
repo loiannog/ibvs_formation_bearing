@@ -6,3 +6,11 @@ lib/
 *.log
 *~
 CMakeCache.txt
+CMakeFiles/
+catkin/
+catkin_generated/
+devel/
+gtest/
+msg_gen/
+src/ibvs_formation_bearing/msg/
+
