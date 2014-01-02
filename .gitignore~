@@ -2,4 +2,3 @@ lib/
 *.bag
 .cproject
 .project
-CMakeCache.txt
