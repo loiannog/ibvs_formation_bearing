@@ -178,7 +178,11 @@ void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point
 		 	double b = minEllipse->center.y - m*minEllipse->center.x;
 		 	Point2f c0(minEllipse->center.x, minEllipse->center.y);
 		 	Point2f c1((c0.x + 2),(c0.x + 2)*m + b);
+		 	double norm_c = sqrt((c1.x - c0.x)*(c1.x - c0.x) + (c1.y - c0.y)*(c1.y - c0.y));
 		 	Point2f diff_c_norm = (c1 - c0);
+		 	diff_c_norm.x = diff_c_norm.x/norm_c;
+		 	diff_c_norm.y = diff_c_norm.y/norm_c;
+
 
 		 	Point2f F1 = diff_c_norm*f + minEllipse->center;//estimate focus of the ellipses
 		 	Point2f F2 = -diff_c_norm*f + minEllipse->center;

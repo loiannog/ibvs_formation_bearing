@@ -8,10 +8,11 @@
 #include <imgproc.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+
 #include <math.h>
 #include <iostream>
 
-#define show_images
+//#define show_images
 #define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
@@ -38,7 +39,7 @@ void getCircle::onInit(void)
 
     image_transport::ImageTransport it(priv_nh);
 
-    ellipse_pos_pub_ = priv_nh.advertise<ibvs_formation_bearing::bearing>("/bearing",
+    ellipse_pos_pub_ = priv_nh.advertise<geometry_msgs::Vector3Stamped>("/bearing1",
                                                                     5);
     ros::Subscriber sub = priv_nh.subscribe("image", 1,  &getCircle::camera_callback, this);
 
@@ -101,16 +102,21 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     //compensate distortion and change coordinates
     vector<Point2f> P;
     vector<Point2f> dst_P;
-    P.resize(1);
-    dst_P.resize(1);
+    P.resize(3);
+    dst_P.resize(3);
     P[0] = minEllipse[0].center;
+    P[1] = P1[0];
+    P[2] = P1[1];
     const cv:: Mat cM = (cv::Mat_<double>(3,3) << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0);
     const cv:: Mat Dl = (cv::Mat_<double>(4,1) << d0, d1, d2, d3);
     undistortPoints(P, dst_P, cM, Dl);
-    ellipse_direction.x = dst_P[0].x;
-    ellipse_direction.y = dst_P[0].y;
-    ellipse_direction.z = 0;
-    ellipse_direction.scale = 0;
+    Point2f diff_dstP = dst_P[2] - dst_P[1];
+    double norm_dstP = sqrt(pow(diff_dstP.x,2) + pow(diff_dstP.y,2));
+    double ellipse_direction_scale = norm_dstP/0.015;
+    ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)*ellipse_direction_scale;
+    ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)*ellipse_direction_scale;
+    ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)*ellipse_direction_scale;
+    //cout<<"position_z:"<<ellipse_direction.z*ellipse_direction.scale<<endl;
     ellipse_pos_pub_.publish(ellipse_direction);
     // Draw contours + rect + ellipse
     for( int i = 0; i< 1; i++ )
