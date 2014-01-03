@@ -23,7 +23,7 @@ using namespace std;
 
 void getCircle::onInit(void)
 {
-  ros::NodeHandle priv_nh(getPrivateNodeHandle());
+  ros::NodeHandle priv_nh(getMTPrivateNodeHandle());
   std::string path_file;
   //priv_nh.param<string>("path_file", path_file, "/home/prisma-airobots/AIRobots_Unina_workspace/AIRobots_UNINA/vision_perching/");
 	priv_nh.param<double>("fx", fx, 621.755015);//Surface of a dot to search in an area.
@@ -43,10 +43,6 @@ void getCircle::onInit(void)
                                                                     5);
     ros::Subscriber sub = priv_nh.subscribe("image", 1,  &getCircle::camera_callback, this);
 
-
-   image_thresholded_pub_ = it.advertise("/image_thresholded",1);
-
-
    ros::spin();
 }
 
@@ -56,33 +52,38 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
 {
 	RNG rng;
 
-  std::vector<cv::KeyPoint> myBlobs;
   cv::Mat src(cv::Size(img->width, img->height), CV_8UC3,
               const_cast<uchar*>(&img->data[0]), img->step);//3 channels image
+  
 
-    Mat getColor_from_img;
-    GaussianBlur(src, src, Size(5,5), 0);//smooth the image
-    getColor_from_img = getColor(src);//get the color red
+    Mat getColor_from_img(src.rows, src.cols, CV_8UC1);
+     //GaussianBlur(src, src, Size(5,5), 0);//smooth the image
+    double secs = ros::Time::now().toSec();
+
+    //getColor(src, getColor_from_img);//get the color red
+    boost::thread thread_getColor(getColor, src, getColor_from_img);
+    thread_getColor.join();
+
 
 
     //Contour definiton
     vector<vector<Point> > contours;
     vector<Vec4i> hierarchy;
 
-    double secs = ros::Time::now().toSec();
 
     Mat contour_img;
     contour_img = getColor_from_img.clone();//copy the image
     findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+   
     //ellipse fitting problem
     vector<RotatedRect> minEllipse( contours.size() );
     for( int i = 0; i < contours.size() ; i++ )
        {
-         if( contours[i].size() > 5 )
+         if( contours[i].size() >= 5 )
            {
         	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
-        	 cout<<"width:"<<minEllipse[i].size.width<<endl;
-        	 if(minEllipse[i].size.width  < 0){
+        	 //cout<<"width:"<<minEllipse[i].size.width<<endl;
+        	 if(minEllipse[i].size.width  < 20){
 				minEllipse.erase(minEllipse.begin() + i);
 				contours.erase(contours.begin() + i);
         	 }
@@ -96,9 +97,10 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     P2.resize(2);
 
     //RANSAC thread for each ellipse
+    if(contours[0].size()>=5){
     boost::thread thread_ellipse_detection(RANSAC_thread,contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
     thread_ellipse_detection.join();
-
+}
     //compensate distortion and change coordinates
     vector<Point2f> P;
     vector<Point2f> dst_P;
@@ -116,10 +118,20 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
     ellipse_pos_pub_.publish(ellipse_direction);
+
+
+
+
+
+
+cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
+
+     //Show your results
+     #ifdef show_images
     // Draw contours + rect + ellipse
-    for( int i = 0; i< 1; i++ )
+    for( int i = 0; i< minEllipse.size(); i++ )
        {
          Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
          Scalar color_max = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
@@ -146,16 +158,14 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
        }
 
 
-     //Show your results
-     #ifdef show_images
-     namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Color Extraction", getColor_from_img);
+     //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
+     //cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
-     namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Contours", contour_img);
+     //namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+     //cv::imshow("Contours", contour_img);
      cv::waitKey(1);
-	 #endif
+    #endif
 
 }
 

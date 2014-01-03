@@ -39,7 +39,6 @@ class getCircle : public nodelet::Nodelet
 	  double d2;
 	  double d3;
 	  int RANSAC_iterations;
-	  image_transport::Publisher image_thresholded_pub_;
 	  ros::Publisher ellipse_pos_pub_;
 	  geometry_msgs::Vector3Stamped ellipse_direction;
 
@@ -57,10 +56,11 @@ class getCircle : public nodelet::Nodelet
 };
 
 void get_5_random_num(int max_num, int* rand_num);
-Mat Erosion(const Mat& src);
-Mat Dilation(const Mat& src);
+void Erosion(const Mat& src);
+void Dilation(const Mat& src);
+void Moprh(const Mat& src);
 Mat FilterColors(const Mat& src);
-Mat getColor(cv::Mat &srcBGR);
+void getColor(cv::Mat &srcBGR, cv::Mat &mask);
 
 void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
 

@@ -13,4 +13,4 @@ devel/
 gtest/
 msg_gen/
 src/ibvs_formation_bearing/msg/
-
+cmake_install.cmake

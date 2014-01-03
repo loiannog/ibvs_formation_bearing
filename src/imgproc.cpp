@@ -5,32 +5,31 @@
 
 
 /// Global variables
-Mat erosion_dst, dilation_dst;
-int dilation_elem = 2;
-int erosion_elem = 2;
-int erosion_size = 7;
-int dilation_size = 7;
-int const max_elem = 2;
+int dilation_elem = 0;
+int erosion_elem = 0;
+int erosion_size = 3;
+int dilation_size = 3;
 /**  @function Erosion  */
-Mat Erosion(const Mat& src)
+void Erosion(const Mat& src)
 {
   int erosion_type;
   if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
   else if( erosion_elem == 1 ){ erosion_type = MORPH_CROSS; }
   else if( erosion_elem == 2) { erosion_type = MORPH_ELLIPSE; }
+  double secserosion = ros::Time::now().toSec();
 
   Mat element = getStructuringElement( erosion_type,
                                        Size( 2*erosion_size + 1, 2*erosion_size+1 ),
                                        Point( erosion_size, erosion_size ) );
-
+   int operation = 2;
   /// Apply the erosion operation
-  erode( src, erosion_dst, element );
-  return erosion_dst;
-  //imshow( "Erosion Demo", erosion_dst );
+  erode( src, src, element );
+
+
 }
 
 /** @function Dilation */
-Mat Dilation(const Mat& src)
+void Dilation(const Mat& src)
 {
   int dilation_type;
   if( dilation_elem == 0 ){ dilation_type = MORPH_RECT; }
@@ -40,29 +39,49 @@ Mat Dilation(const Mat& src)
   Mat element = getStructuringElement( dilation_type,
                                        Size( 2*dilation_size + 1, 2*dilation_size+1 ),
                                        Point( dilation_size, dilation_size ) );
+
   /// Apply the dilation operation
-  dilate( src, dilation_dst, element );
-  return dilation_dst;
+  dilate( src, src, element );
+}
+
+void Moprh(const Mat& src)
+{
+  int erosion_type;
+  if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
+  else if( erosion_elem == 1 ){ erosion_type = MORPH_CROSS; }
+  else if( erosion_elem == 2) { erosion_type = MORPH_ELLIPSE; }
+  double secserosion = ros::Time::now().toSec();
+
+  Mat element = getStructuringElement( erosion_type,
+                                       Size( 2*erosion_size + 1, 2*erosion_size+1 ),
+                                       Point( erosion_size, erosion_size ) );
+  
+  morphologyEx( src, src, MORPH_OPEN, element );
+
 
 }
 
-Mat getColor(cv::Mat &srcBGR)
+
+void getColor(cv::Mat &srcBGR, cv::Mat &mask)
 {
-  cv::Mat mask(srcBGR.rows, srcBGR.cols, CV_8UC1);
+    double secserosion = ros::Time::now().toSec();
+  //cv::Mat mask(srcBGR.rows, srcBGR.cols, CV_8UC1);
   cv::Mat hsv(srcBGR.rows, srcBGR.cols, CV_8UC1);
   cvtColor(srcBGR, hsv, CV_BGR2HSV);
-  inRange(hsv, Scalar(0,20, 20),
-	                Scalar(10, 255, 255), mask);
+  inRange(hsv, Scalar(40, 20, 20),
+	                Scalar(55, 255, 255), mask);
   //cvtColor(hsv, hsv, CV_BGR2GRAY);
 //red good Scalar(0,20, 20), Scalar(10, 255, 255)
+//green good Scalar(40, 20, 20), Scalar(55, 255, 255)
 
+   Moprh(mask);
+   GaussianBlur(mask, mask, Size(7,7), 0, 0);//smooth the image
 
-  mask = Erosion(mask);
-  mask = Dilation(mask);
-  medianBlur(mask, mask, 11);//smooth the image
-  GaussianBlur(mask, mask, Size(11,11), 0);//smooth the image
+cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secserosion)<<endl;
 
-  return mask;
+  //medianBlur(mask, mask, 3);//smooth the image
+
+  //return &mask;
 }
 
 //this is not used for the moment
@@ -238,12 +257,6 @@ void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point
 		    }
 		    if(max_inliers_index.size()>=5){
 		    *minEllipse = fitEllipse( Mat(contours_opt) );//give the ellipse fitting points
-		    cout<<"inliers:"<<max_inliers + 5<<" "<<"of"<<" "<<contours.size()<<endl;
-
-		    }
-		    else{
-		    	*minEllipse = fitEllipse( Mat(contours) );//give the ellipse fitting points
-		    	cout<<"no_inliers"<<endl;
 		    }
 		    //compute the axis of the major axis
 		    double m0 = tan(minEllipse->angle*pi/180);
