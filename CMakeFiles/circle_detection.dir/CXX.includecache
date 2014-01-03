@@ -36,6 +36,14 @@ std_msgs/builtin_float.h
 pluginlib/class_list_macros.h
 -
 
+/home/jpolin/Documents/gitHub/ROS_workspace/ibvs_formation_bearing/src/imgproc.cpp
+imgproc.h
+/home/jpolin/Documents/gitHub/ROS_workspace/ibvs_formation_bearing/src/imgproc.h
+algorithm
+-
+cstdio
+-
+
 /opt/ros/hydro/include/XmlRpcDecl.h
 ros/macros.h
 -

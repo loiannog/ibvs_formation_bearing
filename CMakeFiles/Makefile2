@@ -208,8 +208,8 @@ clean: CMakeFiles/_catkin_empty_exported_target.dir/clean
 # Target rules for target CMakeFiles/circle_detection.dir
 
 # All Build rule for target.
-CMakeFiles/circle_detection.dir/all: CMakeFiles/rosbuild_precompile.dir/all
 CMakeFiles/circle_detection.dir/all: CMakeFiles/lib.dir/all
+CMakeFiles/circle_detection.dir/all: CMakeFiles/rosbuild_precompile.dir/all
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/depend
 	$(MAKE) -f CMakeFiles/circle_detection.dir/build.make CMakeFiles/circle_detection.dir/build
 	$(CMAKE_COMMAND) -E cmake_progress_report /home/jpolin/Documents/gitHub/ROS_workspace/ibvs_formation_bearing/CMakeFiles  1 2
