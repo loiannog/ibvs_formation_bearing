@@ -24,7 +24,7 @@ using namespace cv;
 #include <ibvs_formation_bearing/bearing.h>
 #include <boost/thread.hpp>
 #include <boost/date_time.hpp>
-
+#include <cv_bridge/cv_bridge.h>
 #define pi 3.141592653589
 
 class getCircle : public nodelet::Nodelet
@@ -41,6 +41,7 @@ class getCircle : public nodelet::Nodelet
 	  int RANSAC_iterations;
 	  ros::Publisher ellipse_pos_pub_;
 	  geometry_msgs::Vector3Stamped ellipse_direction;
+          image_transport::Publisher image_pub_;
 
  private:
   void onInit(void);

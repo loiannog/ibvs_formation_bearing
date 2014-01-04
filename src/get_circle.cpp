@@ -12,7 +12,7 @@
 #include <math.h>
 #include <iostream>
 
-#define show_images
+//#define show_images
 #define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
@@ -39,9 +39,10 @@ void getCircle::onInit(void)
 
     image_transport::ImageTransport it(priv_nh);
 
-    ellipse_pos_pub_ = priv_nh.advertise<geometry_msgs::Vector3Stamped>("/bearing1",
+    ellipse_pos_pub_ = priv_nh.advertise<geometry_msgs::Vector3Stamped>("/QuadrotorGolf/bearing1",
                                                                     5);
     ros::Subscriber sub = priv_nh.subscribe("image", 1,  &getCircle::camera_callback, this);
+    image_pub_ = it.advertise("/QuadrotorGolf/ellipse", 1);
 
    ros::spin();
 }
@@ -64,6 +65,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     boost::thread thread_getColor(getColor, src, getColor_from_img);
     thread_getColor.join();
 
+  //cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
 
     //Contour definiton
@@ -134,7 +136,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
     ellipse_pos_pub_.publish(ellipse_direction);
 
 
@@ -156,15 +158,21 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
          line( src, minEllipse[i].center, PM1, color_max, 1, 8 );
          line( src, minEllipse[i].center, Pm1, color_min, 1, 8 );
        }
+  
     }
+    //cv_bridge::CvImagePtr cv_ptr;
+  //  cv_ptr->image = src;
+//    image_pub_.publish(cv_ptr->toImageMsg());
+
+//cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
 #ifdef show_images
-     namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Color Extraction", getColor_from_img);
+     //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
+     //cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
-     namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Contours", contour_img);
+     //namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+     //cv::imshow("Contours", contour_img);
      cv::waitKey(1);
     #endif
 
