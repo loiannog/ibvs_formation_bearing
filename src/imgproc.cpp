@@ -21,7 +21,6 @@ void Erosion(const Mat& src)
   Mat element = getStructuringElement( erosion_type,
                                        Size( 2*erosion_size + 1, 2*erosion_size+1 ),
                                        Point( erosion_size, erosion_size ) );
-   int operation = 2;
   /// Apply the erosion operation
   erode( src, src, element );
 
@@ -68,11 +67,11 @@ void getColor(cv::Mat &srcBGR, cv::Mat &mask)
   //cv::Mat mask(srcBGR.rows, srcBGR.cols, CV_8UC1);
   cv::Mat hsv(srcBGR.rows, srcBGR.cols, CV_8UC1);
   cvtColor(srcBGR, hsv, CV_BGR2HSV);
-  inRange(hsv, Scalar(40, 20, 20),
-	                Scalar(55, 255, 255), mask);
+  inRange(hsv, Scalar(30, 30, 30),
+	                Scalar(40, 240, 240), mask);
   //cvtColor(hsv, hsv, CV_BGR2GRAY);
 //red good Scalar(0,20, 20), Scalar(10, 255, 255)
-//green good Scalar(40, 20, 20), Scalar(55, 255, 255)
+//green good Scalar(30, 30, 30), Scalar(40, 240, 240)
 
    Moprh(mask);
    GaussianBlur(mask, mask, Size(7,7), 0, 0);//smooth the image
@@ -142,7 +141,6 @@ void get_5_random_num(int max_num, int* rand_num)
 //class RANSAC thread functions
 void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num)
 {
-
 
 
 		//Ransac adaptive version just defined in the first ellipse
@@ -255,9 +253,10 @@ void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point
 		    	contours_opt.resize(max_inliers_index.size() + j +1);
 		    	contours_opt[max_inliers_index.size() + j] = contours[rand_index[j]];;//copy random points
 		    }
-		    if(max_inliers_index.size()>=5){
+
 		    *minEllipse = fitEllipse( Mat(contours_opt) );//give the ellipse fitting points
-		    }
+
+
 		    //compute the axis of the major axis
 		    double m0 = tan(minEllipse->angle*pi/180);
 		    double b0 = minEllipse->center.y - m0*minEllipse->center.x;

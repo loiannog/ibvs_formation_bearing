@@ -74,7 +74,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     Mat contour_img;
     contour_img = getColor_from_img.clone();//copy the image
     findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-   
+
     //ellipse fitting problem
     vector<RotatedRect> minEllipse( contours.size() );
     for( int i = 0; i < contours.size() ; i++ )
@@ -97,18 +97,34 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     P2.resize(2);
 
     //RANSAC thread for each ellipse
-    if(contours[0].size()>=5){
+    if(minEllipse.size()>0 && contours[0].size()>=5){
     boost::thread thread_ellipse_detection(RANSAC_thread,contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
     thread_ellipse_detection.join();
-}
+    Point2f PM1;//major axis points
+    Point2f PM2;//major axis points
+    Point2f Pm1;//minor axis points
+    Point2f Pm2;//minor axis points
+    if((sqrt(pow(P1[1].x - minEllipse[0].center.x,2)) + sqrt(pow(P1[1].y - minEllipse[0].center.y,2))) >= (sqrt(pow(P2[1].x - minEllipse[0].center.x,2)) + sqrt(pow(P2[1].y - minEllipse[0].center.y,2)))){
+    PM1 = Point2f(P1[0].x, P1[0].y);
+    Pm1 = Point2f(P2[0].x, P2[0].y);
+    PM2 = Point2f(P1[1].x, P1[1].y);
+    Pm2 = Point2f(P2[1].x, P2[1].y);
+    }
+    else{
+    PM1 = Point2f(P2[0].x, P2[0].y);
+    Pm1 = Point2f(P1[0].x, P1[0].y);
+    PM2 = Point2f(P2[1].x, P2[1].y);
+    Pm2 = Point2f(P1[1].x, P1[1].y);
+    }
+
     //compensate distortion and change coordinates
     vector<Point2f> P;
     vector<Point2f> dst_P;
     P.resize(3);
     dst_P.resize(3);
     P[0] = minEllipse[0].center;
-    P[1] = P1[0];
-    P[2] = P1[1];
+    P[1] = PM1;
+    P[2] = PM2;
     const cv:: Mat cM = (cv::Mat_<double>(3,3) << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0);
     const cv:: Mat Dl = (cv::Mat_<double>(4,1) << d0, d1, d2, d3);
     undistortPoints(P, dst_P, cM, Dl);
@@ -118,18 +134,11 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    cout<<"position_z:"<<ellipse_direction.vector<<endl;
     ellipse_pos_pub_.publish(ellipse_direction);
 
 
-
-
-
-
-cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
-
      //Show your results
-     #ifdef show_images
     // Draw contours + rect + ellipse
     for( int i = 0; i< minEllipse.size(); i++ )
        {
@@ -143,27 +152,19 @@ cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
          Point2f rect_points[4]; minEllipse[i].points( rect_points );
          for( int j = 0; j < 4; j++ )
             line( src, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
-         Point2f PM;//major axis points
-         Point2f Pm;//minor axis points
-         if((sqrt(pow(P1[1].x - minEllipse[0].center.x,2)) + sqrt(pow(P1[1].y - minEllipse[0].center.y,2))) >= (sqrt(pow(P2[1].x - minEllipse[0].center.x,2)) + sqrt(pow(P2[1].y - minEllipse[0].center.y,2)))){
-         PM = Point2f(P1[1].x, P1[1].y);
-         Pm = Point2f(P2[1].x, P2[1].y);
-         }
-         else{
-         PM = Point2f(P2[1].x, P2[1].y);
-         Pm = Point2f(P1[1].x, P1[1].y);
-         }
-         line( src, minEllipse[i].center, PM, color_max, 1, 8 );
-         line( src, minEllipse[i].center, Pm, color_min, 1, 8 );
+
+         line( src, minEllipse[i].center, PM1, color_max, 1, 8 );
+         line( src, minEllipse[i].center, Pm1, color_min, 1, 8 );
        }
+    }
 
-
-     //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
-     //cv::imshow("Color Extraction", getColor_from_img);
+#ifdef show_images
+     namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
+     cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
-     //namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
-     //cv::imshow("Contours", contour_img);
+     namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
+     cv::imshow("Contours", contour_img);
      cv::waitKey(1);
     #endif
 

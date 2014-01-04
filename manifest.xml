@@ -17,6 +17,7 @@
     <!--<depend package="visp"/>-->
 <!--     <depend package="visp_tracker"/>-->
        <depend package="opencv2"/>
+       
   <rosdep name="opencv"/>
     <export>
     <nodelet plugin="${prefix}/nodelet_plugin.xml"/>
