@@ -69,13 +69,13 @@ void getColor(cv::Mat &srcBGR, cv::Mat &mask)
   cvtColor(srcBGR, hsv, CV_BGR2HSV);
   //inRange(hsv, Scalar(38, 20, 20),
 //	                Scalar(50, 255, 255), mask);
-    inRange(hsv, Scalar(30, 30, 30),
+    inRange(hsv, Scalar(32, 30, 30),
 	                Scalar(40, 240, 240), mask);
   //cvtColor(hsv, hsv, CV_BGR2GRAY);
 //red good Scalar(0,20, 20), Scalar(10, 255, 255)
 //green good Scalar(30, 30, 30), Scalar(40, 240, 240)
 
-   Moprh(mask);
+   //Moprh(mask);
    GaussianBlur(mask, mask, Size(7,7), 0, 0);//smooth the image
 
 

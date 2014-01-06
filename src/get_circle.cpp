@@ -38,11 +38,11 @@ void getCircle::onInit(void)
 
 
     image_transport::ImageTransport it(priv_nh);
+    image_ellipse = it.advertise("/QuadrotorGolf/ellipse", 1);
 
     ellipse_pos_pub_ = priv_nh.advertise<geometry_msgs::Vector3Stamped>("/QuadrotorGolf/bearing1",
                                                                     5);
     ros::Subscriber sub = priv_nh.subscribe("image", 1,  &getCircle::camera_callback, this);
-    image_pub_ = it.advertise("/QuadrotorGolf/ellipse", 1);
 
    ros::spin();
 }
@@ -158,17 +158,19 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
          line( src, minEllipse[i].center, PM1, color_max, 1, 8 );
          line( src, minEllipse[i].center, Pm1, color_min, 1, 8 );
        }
-  
+
     }
-    //cv_bridge::CvImagePtr cv_ptr;
-  //  cv_ptr->image = src;
-//    image_pub_.publish(cv_ptr->toImageMsg());
+    //publish the image
+    cv_bridge::CvImage cv_ptr;
+    cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
+    cv_ptr.image = src.clone();
+    image_ellipse.publish(cv_ptr.toImageMsg());
 
 //cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
 #ifdef show_images
-     //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
-     //cv::imshow("Color Extraction", getColor_from_img);
+     namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
+     cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
      //namedWindow( "Contours", CV_WINDOW_AUTOSIZE );

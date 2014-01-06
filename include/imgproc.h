@@ -41,7 +41,7 @@ class getCircle : public nodelet::Nodelet
 	  int RANSAC_iterations;
 	  ros::Publisher ellipse_pos_pub_;
 	  geometry_msgs::Vector3Stamped ellipse_direction;
-          image_transport::Publisher image_pub_;
+      image_transport::Publisher image_ellipse;
 
  private:
   void onInit(void);
