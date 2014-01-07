@@ -5,12 +5,8 @@
 
 
 /// Global variables
-int dilation_elem = 0;
-int erosion_elem = 0;
-int erosion_size = 3;
-int dilation_size = 3;
 /**  @function Erosion  */
-void Erosion(const Mat& src)
+void getCircle::Erosion(const Mat& src)
 {
   int erosion_type;
   if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
@@ -28,7 +24,7 @@ void Erosion(const Mat& src)
 }
 
 /** @function Dilation */
-void Dilation(const Mat& src)
+void getCircle::Dilation(const Mat& src)
 {
   int dilation_type;
   if( dilation_elem == 0 ){ dilation_type = MORPH_RECT; }
@@ -43,7 +39,7 @@ void Dilation(const Mat& src)
   dilate( src, src, element );
 }
 
-void Moprh(const Mat& src)
+void getCircle::Moprh(const Mat& src)
 {
   int erosion_type;
   if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
@@ -61,20 +57,18 @@ void Moprh(const Mat& src)
 }
 
 
-void getColor(cv::Mat &srcBGR, cv::Mat &mask)
+void getCircle::getColor(cv::Mat &srcBGR, cv::Mat &mask)
 {
   
   //cv::Mat mask(srcBGR.rows, srcBGR.cols, CV_8UC1);
   cv::Mat hsv(srcBGR.rows, srcBGR.cols, CV_8UC1);
   cvtColor(srcBGR, hsv, CV_BGR2HSV);
-  inRange(hsv, Scalar(30, 30, 30),
+  inRange(hsv, Scalar(28, 30, 30),
 	                Scalar(40, 240, 240), mask);
-  //  inRange(hsv, Scalar(38, 30, 30),
-	//                Scalar(50, 240, 240), mask);
-  //cvtColor(hsv, hsv, CV_BGR2GRAY);
-//red good Scalar(0,20, 20), Scalar(10, 255, 255)
-//green good Scalar(30, 30, 30), Scalar(40, 240, 240)//handheld
 
+//red good Scalar(0,20, 20), Scalar(10, 255, 255)
+//green good Scalar(38, 30, 30), Scalar(50, 240, 240)//handheld
+//inRange(hsv, Scalar(30, 30, 30), Scalar(40, 240, 240), mask); green circle
    Moprh(mask);
    GaussianBlur(mask, mask, Size(7,7), 0, 0);//smooth the image
 
@@ -85,7 +79,7 @@ void getColor(cv::Mat &srcBGR, cv::Mat &mask)
 }
 
 //this is not used for the moment
-Mat FilterColors(const Mat& src)
+Mat getCircle::FilterColors(const Mat& src)
 {
     assert(src.type() == CV_8UC3);
 
@@ -96,13 +90,13 @@ Mat FilterColors(const Mat& src)
     Mat out[] = {imR, imG, imB};
     int from_to[] = {0, 2, 1, 1,  2, 0};
     cv::mixChannels(&src, 1, out, 3, from_to, 3);
-    cv::bitwise_not(imG, imG);
+    cv::bitwise_not(imR, imR);
     cv::bitwise_not(imB, imB);
 
 
 
-    //cv::multiply(imR, imG, imGboost, (double)1/255);
-    //cv::multiply(imGboost, imB, imGboost, (double)1/255);
+    cv::multiply(imG, imR, imG, (double)1/255);
+    cv::multiply(imG, imB, imG, (double)1/255);
     //Erosion(imG);//filtering
     //Dilation(imG);//filtering
     return imG;

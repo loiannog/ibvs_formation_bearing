@@ -12,7 +12,7 @@
 #include <math.h>
 #include <iostream>
 
-//#define show_images
+#define show_images
 #define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
@@ -35,8 +35,10 @@ void getCircle::onInit(void)
 	priv_nh.param<double>("d2", d2, -6.1e-05);//Surface of a dot to search in an area.
 	priv_nh.param<double>("d3", d3, -0.002139);//Surface of a dot to search in an area.
 	priv_nh.param<int>("RANSAC_iterations", RANSAC_iterations, 4400);//RANSAC iterations
-
-
+	priv_nh.param<int>("erosion_size", erosion_size, 3);//Surface of a dot to search in an area.
+	priv_nh.param<int>("dilation_size", dilation_size, 3);//Surface of a dot to search in an area.
+	priv_nh.param<int>("dilation_elem", dilation_elem, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("erosion_elem", erosion_elem, 0);//Surface of a dot to search in an area.
     image_transport::ImageTransport it(priv_nh);
     image_ellipse = it.advertise("/QuadrotorGolf/ellipse", 1);
 
@@ -62,7 +64,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     double secs = ros::Time::now().toSec();
 
     //getColor(src, getColor_from_img);//get the color red
-    boost::thread thread_getColor(getColor, src, getColor_from_img);
+    boost::thread thread_getColor(&getCircle::getColor, this, src, getColor_from_img);
     thread_getColor.join();
 
   //cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
@@ -136,28 +138,28 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    cout<<"position_z:"<<ellipse_direction.vector<<endl;
     ellipse_pos_pub_.publish(ellipse_direction);
 
 
      //Show your results
     // Draw contours + rect + ellipse
-    for( int i = 0; i< minEllipse.size(); i++ )
-       {
+//    for( int i = 0; i< minEllipse.size(); i++ )
+  //     {
          Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
          Scalar color_max = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
          Scalar color_min = Scalar( rng.uniform(0, 100), rng.uniform(0,100), rng.uniform(0,255) );
 
          //ellipse( src, minEllipse[i], color, 2, 8 );//draw ellipse
-         ellipse(src, minEllipse[i].center, minEllipse[i].size*0.5f, minEllipse[i].angle, 0, 360, Scalar(0,255,255), 1, CV_AA);
+         ellipse(src, minEllipse[0].center, minEllipse[0].size*0.5f, minEllipse[0].angle, 0, 360, Scalar(0,255,255), 1, CV_AA);
 
-         Point2f rect_points[4]; minEllipse[i].points( rect_points );
+         Point2f rect_points[4]; minEllipse[0].points( rect_points );
          for( int j = 0; j < 4; j++ )
             line( src, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
 
-         line( src, minEllipse[i].center, PM1, color_max, 1, 8 );
-         line( src, minEllipse[i].center, Pm1, color_min, 1, 8 );
-       }
+         line( src, minEllipse[0].center, PM1, color_max, 1, 8 );
+         line( src, minEllipse[0].center, Pm1, color_min, 1, 8 );
+    //   }
 
     }
     //publish the image

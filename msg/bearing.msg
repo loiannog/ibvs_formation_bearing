@@ -1,4 +1,1 @@
-float64 x
-float64 y
-float64 z
-float64 scale
+geometry_msgs/Vector3Stamped[] bearings
