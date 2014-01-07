@@ -42,7 +42,7 @@ void getCircle::onInit(void)
     image_transport::ImageTransport it(priv_nh);
     image_ellipse = it.advertise("/QuadrotorGolf/ellipse", 1);
 
-    ellipse_pos_pub_ = priv_nh.advertise<geometry_msgs::Vector3Stamped>("/QuadrotorGolf/bearing1",
+    ellipse_pos_pub_ = priv_nh.advertise<ibvs_formation_bearing::bearing>("/bearings",
                                                                     5);
     ros::Subscriber sub = priv_nh.subscribe("image", 1,  &getCircle::camera_callback, this);
 
@@ -138,14 +138,13 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    cout<<"position_z:"<<ellipse_direction.vector<<endl;
-    ellipse_pos_pub_.publish(ellipse_direction);
+    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    ibvs_formation_bearing::bearing ellipses;
+    ellipses.bearings.push_back(ellipse_direction);
 
 
      //Show your results
     // Draw contours + rect + ellipse
-//    for( int i = 0; i< minEllipse.size(); i++ )
-  //     {
          Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
          Scalar color_max = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
          Scalar color_min = Scalar( rng.uniform(0, 100), rng.uniform(0,100), rng.uniform(0,255) );
@@ -159,7 +158,6 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
 
          line( src, minEllipse[0].center, PM1, color_max, 1, 8 );
          line( src, minEllipse[0].center, Pm1, color_min, 1, 8 );
-    //   }
 
     }
     //publish the image
