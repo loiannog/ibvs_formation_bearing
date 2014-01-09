@@ -54,7 +54,7 @@ class getCircle : public nodelet::Nodelet
       void Dilation(const Mat& src);
       void Moprh(const Mat& src);
       Mat FilterColors(const Mat& src);
-      void getColor(cv::Mat &srcBGR, cv::Mat &mask, string color, vector<RotatedRect>& minEllipse);
+      void getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<RotatedRect>& minEllipse);
       void ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse);
       void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
 

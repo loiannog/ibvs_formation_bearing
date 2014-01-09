@@ -57,17 +57,20 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
               const_cast<uchar*>(&img->data[0]), img->step);//3 channels image
   
 
-    Mat getColor_from_img(src.rows, src.cols, CV_8UC1);
      //GaussianBlur(src, src, Size(5,5), 0);//smooth the image
     double secs = ros::Time::now().toSec();
-
+    //convert the image to hsv
+    cv::Mat hsv(src.rows, src.cols, CV_8UC1);
+    cvtColor(src, hsv, CV_BGR2HSV);
+cout<<"in_thread"<<endl;
     //getColor(src, getColor_from_img);//get the color red
     vector<RotatedRect> minEllipse;
-    boost::thread thread_getColor_green(&getCircle::getColor, this, src, getColor_from_img, "green", minEllipse);
-    boost::thread thread_getColor_green2(&getCircle::getColor, this, src, getColor_from_img, "green", minEllipse);
+    vector<RotatedRect> minEllipse2;
+    boost::thread thread_getColor_green(&getCircle::getColor, this, hsv, src, "green", minEllipse);
+    boost::thread thread_getColor_green2(&getCircle::getColor, this, hsv, src, "green", minEllipse2);
     thread_getColor_green.join();
     thread_getColor_green2.join();
-
+    cout<<"out_thread"<<endl;
   //cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
     //publish bearings
     ibvs_formation_bearing::bearing ellipses;
@@ -81,14 +84,14 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
 
 cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
-#ifdef show_images
-     namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Color Extraction", getColor_from_img);
+ #ifdef show_images
+     //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
+     //cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
      //namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
      //cv::imshow("Contours", contour_img);
-     cv::waitKey(1);
+     cv::waitKey(0);
     #endif
 
 

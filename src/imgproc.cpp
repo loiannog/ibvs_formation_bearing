@@ -57,7 +57,7 @@ void getCircle::Moprh(const Mat& src)
 }
 
 
-void getCircle::getColor(cv::Mat &srcBGR, cv::Mat &mask, string color, vector<RotatedRect>& minEllipse)
+void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<RotatedRect>& minEllipse)
 {
 
 
@@ -66,14 +66,11 @@ void getCircle::getColor(cv::Mat &srcBGR, cv::Mat &mask, string color, vector<Ro
     numbers["violet"] = 2;
     numbers["orange"] = 3;
 
-  //cv::Mat mask(srcBGR.rows, srcBGR.cols, CV_8UC1);
-  cv::Mat hsv(srcBGR.rows, srcBGR.cols, CV_8UC1);
-  cvtColor(srcBGR, hsv, CV_BGR2HSV);
   switch (numbers[color])
   {
   case 1:
-	  inRange(hsv, Scalar(28, 30, 30),
-		                Scalar(40, 240, 240), mask);
+	  inRange(srchsv, Scalar(28, 30, 30),
+		                Scalar(40, 240, 240), srchsv);
 	//red good Scalar(0,20, 20), Scalar(10, 255, 255)
 	//green good Scalar(38, 30, 30), Scalar(50, 240, 240)//handheld
 	//inRange(hsv, Scalar(30, 30, 30), Scalar(40, 240, 240), mask); green circle;
@@ -89,15 +86,15 @@ void getCircle::getColor(cv::Mat &srcBGR, cv::Mat &mask, string color, vector<Ro
 		cout << "Invalid Selection. Please try Again." << endl;
   }
 
-   Moprh(mask);
-   GaussianBlur(mask, mask, Size(7,7), 0, 0);//smooth the image
+   Moprh(srchsv);
+   GaussianBlur(srchsv, srchsv, Size(7,7), 0, 0);//smooth the image
    //Contour definiton
    vector<vector<Point> > contours;
    vector<Vec4i> hierarchy;
 
    //Mat contour_img;
    //contour_img = getColor_from_img.clone();//copy the image
-   findContours( mask, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+   findContours( srchsv, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
 
    //ellipse fitting problem
    minEllipse.resize( contours.size() );
@@ -120,11 +117,13 @@ void getCircle::getColor(cv::Mat &srcBGR, cv::Mat &mask, string color, vector<Ro
 
    //RANSAC thread for each ellipse
    if(minEllipse.size()>0 && contours[0].size()>=5){
-   boost::thread thread_ellipse_detection(&getCircle::RANSAC_thread, this, contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
-   thread_ellipse_detection.join();
-   ellipsePublisher(&srcBGR, &P1, &P2, &minEllipse[0]);
+   //boost::thread thread_ellipse_detection(&getCircle::RANSAC_thread, this, contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
+   //thread_ellipse_detection.join();   //boost::thread thread_ellipse_detection(&getCircle::RANSAC_thread, this, contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
+	RANSAC_thread(contours[0], &minEllipse[0], &P1, &P2, RANSAC_iterations);
+    ellipsePublisher(&src, &P1, &P2, &minEllipse[0]);
 
    }
+
   //return &mask;
 }
 
