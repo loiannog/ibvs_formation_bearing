@@ -220,7 +220,7 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     //cout<<"position_z:"<<ellipse_direction.vector<<endl;
     ibvs_formation_bearing::bearing ellipses;
     ellipses.bearings.push_back(ellipse_direction);
-
+    ellipse_pos_pub_.publish(ellipses);
     //Show your results
       // Draw contours + rect + ellipse
            Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
