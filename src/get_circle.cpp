@@ -49,11 +49,9 @@ void getCircle::onInit(void)
    ros::spin();
 }
 
-
 void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
 	//	const sensor_msgs::CameraInfo::ConstPtr &c)
 {
-	RNG rng;
 
   cv::Mat src(cv::Size(img->width, img->height), CV_8UC3,
               const_cast<uchar*>(&img->data[0]), img->step);//3 channels image
@@ -64,102 +62,12 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     double secs = ros::Time::now().toSec();
 
     //getColor(src, getColor_from_img);//get the color red
-    boost::thread thread_getColor(&getCircle::getColor, this, src, getColor_from_img);
-    thread_getColor.join();
+    vector<RotatedRect> minEllipse;
+    boost::thread thread_getColor_green(&getCircle::getColor, this, src, getColor_from_img, "green", minEllipse);
+    thread_getColor_green.join();
 
   //cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
-
-    //Contour definiton
-    vector<vector<Point> > contours;
-    vector<Vec4i> hierarchy;
-
-
-    Mat contour_img;
-    contour_img = getColor_from_img.clone();//copy the image
-    findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-
-    //ellipse fitting problem
-    vector<RotatedRect> minEllipse( contours.size() );
-    for( int i = 0; i < contours.size() ; i++ )
-       {
-         if( contours[i].size() >= 5 )
-           {
-        	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
-        	 //cout<<"width:"<<minEllipse[i].size.width<<endl;
-        	 if(minEllipse[i].size.width  < 20){
-				minEllipse.erase(minEllipse.begin() + i);
-				contours.erase(contours.begin() + i);
-        	 }
-           }
-       }
-
-    //matrix of points
-    vector<Point2f> P1;
-    vector<Point2f> P2;
-    P1.resize(2);
-    P2.resize(2);
-
-    //RANSAC thread for each ellipse
-    if(minEllipse.size()>0 && contours[0].size()>=5){
-    boost::thread thread_ellipse_detection(RANSAC_thread,contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
-    thread_ellipse_detection.join();
-    Point2f PM1;//major axis points
-    Point2f PM2;//major axis points
-    Point2f Pm1;//minor axis points
-    Point2f Pm2;//minor axis points
-    if((sqrt(pow(P1[1].x - minEllipse[0].center.x,2)) + sqrt(pow(P1[1].y - minEllipse[0].center.y,2))) >= (sqrt(pow(P2[1].x - minEllipse[0].center.x,2)) + sqrt(pow(P2[1].y - minEllipse[0].center.y,2)))){
-    PM1 = Point2f(P1[0].x, P1[0].y);
-    Pm1 = Point2f(P2[0].x, P2[0].y);
-    PM2 = Point2f(P1[1].x, P1[1].y);
-    Pm2 = Point2f(P2[1].x, P2[1].y);
-    }
-    else{
-    PM1 = Point2f(P2[0].x, P2[0].y);
-    Pm1 = Point2f(P1[0].x, P1[0].y);
-    PM2 = Point2f(P2[1].x, P2[1].y);
-    Pm2 = Point2f(P1[1].x, P1[1].y);
-    }
-
-    //compensate distortion and change coordinates
-    vector<Point2f> P;
-    vector<Point2f> dst_P;
-    P.resize(3);
-    dst_P.resize(3);
-    P[0] = minEllipse[0].center;
-    P[1] = PM1;
-    P[2] = PM2;
-    const cv:: Mat cM = (cv::Mat_<double>(3,3) << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0);
-    const cv:: Mat Dl = (cv::Mat_<double>(4,1) << d0, d1, d2, d3);
-    undistortPoints(P, dst_P, cM, Dl);
-    Point2f diff_dstP = dst_P[2] - dst_P[1];
-    double norm_dstP = sqrt(pow(diff_dstP.x,2) + pow(diff_dstP.y,2));
-    double ellipse_direction_scale = norm_dstP/0.15;
-    ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
-    ibvs_formation_bearing::bearing ellipses;
-    ellipses.bearings.push_back(ellipse_direction);
-
-
-     //Show your results
-    // Draw contours + rect + ellipse
-         Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-         Scalar color_max = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );
-         Scalar color_min = Scalar( rng.uniform(0, 100), rng.uniform(0,100), rng.uniform(0,255) );
-
-         //ellipse( src, minEllipse[i], color, 2, 8 );//draw ellipse
-         ellipse(src, minEllipse[0].center, minEllipse[0].size*0.5f, minEllipse[0].angle, 0, 360, Scalar(0,255,255), 1, CV_AA);
-
-         Point2f rect_points[4]; minEllipse[0].points( rect_points );
-         for( int j = 0; j < 4; j++ )
-            line( src, rect_points[j], rect_points[(j+1)%4], color, 1, 8 );
-
-         line( src, minEllipse[0].center, PM1, color_max, 1, 8 );
-         line( src, minEllipse[0].center, Pm1, color_min, 1, 8 );
-
-    }
     //publish the image
     cv_bridge::CvImage cv_ptr;
     cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
@@ -177,6 +85,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      //cv::imshow("Contours", contour_img);
      cv::waitKey(1);
     #endif
+
 
 }
 

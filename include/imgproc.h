@@ -25,6 +25,8 @@ using namespace cv;
 #include <boost/thread.hpp>
 #include <boost/date_time.hpp>
 #include <cv_bridge/cv_bridge.h>
+#include <string>
+#include <map>
 #define pi 3.141592653589
 
 class getCircle : public nodelet::Nodelet
@@ -43,6 +45,7 @@ class getCircle : public nodelet::Nodelet
 	  int dilation_size;
 	  int dilation_elem;
 	  int erosion_elem;
+	  RNG rng;
 	  ros::Publisher ellipse_pos_pub_;
 	  geometry_msgs::Vector3Stamped ellipse_direction;
       image_transport::Publisher image_ellipse;
@@ -51,7 +54,10 @@ class getCircle : public nodelet::Nodelet
       void Dilation(const Mat& src);
       void Moprh(const Mat& src);
       Mat FilterColors(const Mat& src);
-      void getColor(cv::Mat &srcBGR, cv::Mat &mask);
+      void getColor(cv::Mat &srcBGR, cv::Mat &mask, string color, vector<RotatedRect>& minEllipse);
+      void ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse);
+      void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
+
  private:
   void onInit(void);
 
@@ -68,7 +74,6 @@ class getCircle : public nodelet::Nodelet
 void get_5_random_num(int max_num, int* rand_num);
 
 
-void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
 
 
 #endif
