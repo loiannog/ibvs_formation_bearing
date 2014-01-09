@@ -218,9 +218,7 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     //cout<<"position_z:"<<ellipse_direction.vector<<endl;
-    ibvs_formation_bearing::bearing ellipses;
-    ellipses.bearings.push_back(ellipse_direction);
-    ellipse_pos_pub_.publish(ellipses);
+
     //Show your results
       // Draw contours + rect + ellipse
            Scalar color = Scalar( rng.uniform(0, 255), rng.uniform(0,255), rng.uniform(0,255) );

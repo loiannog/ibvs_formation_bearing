@@ -12,7 +12,7 @@
 #include <math.h>
 #include <iostream>
 
-//#define show_images
+#define show_images
 #define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
@@ -64,17 +64,22 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     //getColor(src, getColor_from_img);//get the color red
     vector<RotatedRect> minEllipse;
     boost::thread thread_getColor_green(&getCircle::getColor, this, src, getColor_from_img, "green", minEllipse);
+    boost::thread thread_getColor_green2(&getCircle::getColor, this, src, getColor_from_img, "green", minEllipse);
     thread_getColor_green.join();
+    thread_getColor_green2.join();
 
   //cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
-
+    //publish bearings
+    ibvs_formation_bearing::bearing ellipses;
+    ellipses.bearings.push_back(ellipse_direction);
+    ellipse_pos_pub_.publish(ellipses);
     //publish the image
     cv_bridge::CvImage cv_ptr;
     cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
     cv_ptr.image = src.clone();
     image_ellipse.publish(cv_ptr.toImageMsg());
 
-//cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
+cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
 #ifdef show_images
      namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
