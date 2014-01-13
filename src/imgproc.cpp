@@ -74,8 +74,9 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, str
 	//inRange(hsv, Scalar(30, 30, 30), Scalar(40, 240, 240), mask); green circle;
       break;
   case 2:
-	  inRange(srchsv, Scalar(28, 30, 30),
-		                Scalar(40, 240, 240), srchsv);//violet values
+    // Center around HSV(23,31,20)
+	  inRange(srchsv, Scalar(9, 50, 38),
+		                Scalar(21, 116, 76), srchsv);//violet values
 	 //Scalar(0,20, 20), Scalar(10, 255, 255);//red good
      break;
   case 3:
@@ -90,11 +91,9 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, str
    //Contour definiton
    vector<vector<Point> > contours;
    vector<Vec4i> hierarchy;
-
-   //Mat contour_img;
-   //contour_img = getColor_from_img.clone();//copy the image
    findContours( srchsv, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-   contour_img = srchsv.clone();
+   // Draw contours
+   drawContours(contour_img, contours, -1, Scalar(255,255,255));
    //ellipse fitting problem
    minEllipse.resize( contours.size() );
    for( int i = 0; i < contours.size() ; i++ )

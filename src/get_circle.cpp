@@ -65,18 +65,18 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     //convert the image to hsv
     cv::Mat hsv(src.rows, src.cols, CV_8UC1);
     cv::Mat hsv2(src.rows, src.cols, CV_8UC1);
-    cv::Mat contour_img1(src.rows, src.cols, CV_8UC1);
-    cv::Mat contour_img2(src.rows, src.cols, CV_8UC1);
+    cv::Mat contour_img1(src.rows, src.cols, CV_8UC3);
+    cv::Mat contour_img2(src.rows, src.cols, CV_8UC3);
 
     cvtColor(src, hsv, CV_BGR2HSV);
 
     //getColor(src, getColor_from_img);//get the color red
     vector<RotatedRect> minEllipse_color1;
     vector<RotatedRect> minEllipse_color2;
-    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, "green", minEllipse_color1);
-    boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, "green", minEllipse_color2);
+    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, "violet", minEllipse_color1);
+    //boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, "green", minEllipse_color2);
     thread_getColor_1.join();
-    thread_getColor_2.join();
+    //thread_getColor_2.join();
     //publish bearings
     ibvs_formation_bearing::bearing ellipses;
     ellipses.bearings.push_back(ellipse_direction);
@@ -95,9 +95,9 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      imshow( "Ellipse Fitting", src );
      namedWindow( "Contours1", CV_WINDOW_AUTOSIZE );
      cv::imshow("Contours1", contour_img1);
-     namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Contours2", contour_img2);
-     cv::waitKey(0);
+    // namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
+    // cv::imshow("Contours2", contour_img2);
+     cv::waitKey(1);
     #endif
 
 
