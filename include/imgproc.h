@@ -28,7 +28,7 @@ using namespace cv;
 #include <string>
 #include <map>
 #define pi 3.141592653589
-#define show_images
+//#define show_images
 #define RANSAC_ellipse
 
 class getCircle : public nodelet::Nodelet

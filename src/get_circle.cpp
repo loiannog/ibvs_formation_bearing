@@ -12,8 +12,6 @@
 #include <math.h>
 #include <iostream>
 
-//#define show_images
-#define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
 using namespace std;
