@@ -64,9 +64,11 @@ void getCircle::getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, st
     numbers["green"] = 1;
     numbers["violet"] = 2;
     numbers["orange"] = 3;
+double secs_morph = ros::Time::now().toSec();
 
   switch (numbers[color])
   {
+
   case 1:
 	  inRange(srchsv, Scalar(28, 30, 30),
 		                Scalar(40, 240, 240), contour_img);
@@ -88,12 +90,23 @@ void getCircle::getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, st
 		cout << "Invalid Selection. Please try Again." << endl;
   }
 
+
    Moprh(contour_img);
+    cout<<"morph time:"<<(ros::Time::now().toSec()-secs_morph)<<endl;
+
+double secs_gaussian = ros::Time::now().toSec();
+
    GaussianBlur(contour_img, contour_img, Size(7,7), 0, 0);//smooth the image
+    cout<<"gaussian time:"<<(ros::Time::now().toSec()-secs_gaussian)<<endl;
+
    //Contour definiton
    vector<vector<Point> > contours;
    vector<Vec4i> hierarchy;
+double secs_find_contour = ros::Time::now().toSec();
+
    findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
+    cout<<"find contour time:"<<(ros::Time::now().toSec()-secs_find_contour)<<endl;
 
    //ellipse fitting problem
    minEllipse.resize( contours.size() );
@@ -117,7 +130,11 @@ void getCircle::getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, st
    //RANSAC thread for each ellipse
    if(minEllipse.size()>0 && contours[0].size()>=5){
 #ifdef RANSAC_ellipse
+double secs_ransac = ros::Time::now().toSec();
+
  	RANSAC_thread(contours[0], &minEllipse[0], &P1, &P2, RANSAC_iterations);
+    cout<<"ransac time:"<<(ros::Time::now().toSec()-secs_ransac)<<endl;
+
 #endif
 	ellipsePublisher(&src, &P1, &P2, &minEllipse[0]);
    }
@@ -215,7 +232,7 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
 
     //Show your results
       // Draw contours + rect + ellipse
@@ -332,7 +349,7 @@ void getCircle::RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, v
 		    	for(int i = 0; i<inliers_index.size(); i++)
 		    		max_inliers_index[i] = inliers_index[i];
 		            max_inliers = ninliers;
-		            sample_num = (int)(log((double)(1-0.99))/log(1.0-pow(ninliers*1.0/contours.size(), 5)))*10;
+		           // sample_num = (int)(log((double)(1-0.99))/log(1.0-pow(ninliers*1.0/contours.size(), 5)))*10;
 		          }
 		    ransac_count++;//increment ransac counter iterations
 

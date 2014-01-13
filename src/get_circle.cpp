@@ -76,15 +76,17 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     thread_getColor_1.join();
     //thread_getColor_2.join();
     //publish bearings
+    cout<<"total time:"<<(ros::Time::now().toSec()-secs)<<endl;
+
     ibvs_formation_bearing::bearing ellipses;
     ellipses.bearings.push_back(ellipse_direction);
     ellipse_pos_pub_.publish(ellipses);
     //publish the image
     cv_bridge::CvImage cv_ptr;
-    cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
-    cv_ptr.image = src.clone();
+    cv_ptr.encoding = sensor_msgs::image_encodings::MONO8;
+    cv_ptr.image = contour_img1.clone();
     image_ellipse.publish(cv_ptr.toImageMsg());
-    cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
+    cout<<"total time image included:"<<(ros::Time::now().toSec()-secs)<<endl;
 
  #ifdef show_images
      //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );

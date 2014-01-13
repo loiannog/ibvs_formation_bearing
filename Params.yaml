@@ -7,13 +7,13 @@ d0: -0.236460
 d1: 0.041656
 d2: -0.000644
 d3:  0.000827
-RANSAC_iterations: 500
+RANSAC_iterations: 3
 erosion_size: 3
 dilation_size: 3
 dilation_elem: 0
 erosion_elem: 0
 color1: "green"
-color2: "red"
+color2: "violet"
 
 
 
