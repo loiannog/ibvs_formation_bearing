@@ -12,7 +12,7 @@
 #include <math.h>
 #include <iostream>
 
-//#define show_images
+#define show_images
 #define RANSAC_ellipse
 // Set dot characteristics for the auto detection
 
@@ -39,6 +39,9 @@ void getCircle::onInit(void)
 	priv_nh.param<int>("dilation_size", dilation_size, 3);//Surface of a dot to search in an area.
 	priv_nh.param<int>("dilation_elem", dilation_elem, 0);//Surface of a dot to search in an area.
 	priv_nh.param<int>("erosion_elem", erosion_elem, 0);//Surface of a dot to search in an area.
+	priv_nh.param<string>("color1", color1, "green");//Surface of a dot to search in an area.
+	priv_nh.param<string>("color2", color2, "red");//Surface of a dot to search in an area.
+
     image_transport::ImageTransport it(priv_nh);
     image_ellipse = it.advertise("/QuadrotorGolf/ellipse", 1);
 
@@ -61,17 +64,19 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     double secs = ros::Time::now().toSec();
     //convert the image to hsv
     cv::Mat hsv(src.rows, src.cols, CV_8UC1);
+    cv::Mat hsv2(src.rows, src.cols, CV_8UC1);
+    cv::Mat contour_img1(src.rows, src.cols, CV_8UC1);
+    cv::Mat contour_img2(src.rows, src.cols, CV_8UC1);
+
     cvtColor(src, hsv, CV_BGR2HSV);
-cout<<"in_thread"<<endl;
+
     //getColor(src, getColor_from_img);//get the color red
-    vector<RotatedRect> minEllipse;
-    vector<RotatedRect> minEllipse2;
-    boost::thread thread_getColor_green(&getCircle::getColor, this, hsv, src, "green", minEllipse);
-    boost::thread thread_getColor_green2(&getCircle::getColor, this, hsv, src, "green", minEllipse2);
-    thread_getColor_green.join();
-    thread_getColor_green2.join();
-    cout<<"out_thread"<<endl;
-  //cout<<"filtering time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
+    vector<RotatedRect> minEllipse_color1;
+    vector<RotatedRect> minEllipse_color2;
+    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, "green", minEllipse_color1);
+    boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, "green", minEllipse_color2);
+    thread_getColor_1.join();
+    thread_getColor_2.join();
     //publish bearings
     ibvs_formation_bearing::bearing ellipses;
     ellipses.bearings.push_back(ellipse_direction);
@@ -81,16 +86,17 @@ cout<<"in_thread"<<endl;
     cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
     cv_ptr.image = src.clone();
     image_ellipse.publish(cv_ptr.toImageMsg());
-
-cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
+    cout<<"total time:"<<1/(ros::Time::now().toSec()-secs)<<endl;
 
  #ifdef show_images
      //namedWindow( "Color Extraction", CV_WINDOW_AUTOSIZE );
      //cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
-     //namedWindow( "Contours", CV_WINDOW_AUTOSIZE );
-     //cv::imshow("Contours", contour_img);
+     namedWindow( "Contours1", CV_WINDOW_AUTOSIZE );
+     cv::imshow("Contours1", contour_img1);
+     namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
+     cv::imshow("Contours2", contour_img2);
      cv::waitKey(0);
     #endif
 

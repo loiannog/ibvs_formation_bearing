@@ -45,7 +45,6 @@ void getCircle::Moprh(const Mat& src)
   if( erosion_elem == 0 ){ erosion_type = MORPH_RECT; }
   else if( erosion_elem == 1 ){ erosion_type = MORPH_CROSS; }
   else if( erosion_elem == 2) { erosion_type = MORPH_ELLIPSE; }
-  double secserosion = ros::Time::now().toSec();
 
   Mat element = getStructuringElement( erosion_type,
                                        Size( 2*erosion_size + 1, 2*erosion_size+1 ),
@@ -57,7 +56,7 @@ void getCircle::Moprh(const Mat& src)
 }
 
 
-void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<RotatedRect>& minEllipse)
+void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse)
 {
 
 
@@ -71,14 +70,14 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<Rota
   case 1:
 	  inRange(srchsv, Scalar(28, 30, 30),
 		                Scalar(40, 240, 240), srchsv);
-	//red good Scalar(0,20, 20), Scalar(10, 255, 255)
 	//green good Scalar(38, 30, 30), Scalar(50, 240, 240)//handheld
 	//inRange(hsv, Scalar(30, 30, 30), Scalar(40, 240, 240), mask); green circle;
-
       break;
   case 2:
-	  ;
-      break;
+	  inRange(srchsv, Scalar(28, 30, 30),
+		                Scalar(40, 240, 240), srchsv);//violet values
+	 //Scalar(0,20, 20), Scalar(10, 255, 255);//red good
+     break;
   case 3:
 	  ;
       break;
@@ -95,7 +94,7 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<Rota
    //Mat contour_img;
    //contour_img = getColor_from_img.clone();//copy the image
    findContours( srchsv, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-
+   contour_img = srchsv.clone();
    //ellipse fitting problem
    minEllipse.resize( contours.size() );
    for( int i = 0; i < contours.size() ; i++ )
@@ -117,14 +116,14 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<Rota
 
    //RANSAC thread for each ellipse
    if(minEllipse.size()>0 && contours[0].size()>=5){
-   //boost::thread thread_ellipse_detection(&getCircle::RANSAC_thread, this, contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
-   //thread_ellipse_detection.join();   //boost::thread thread_ellipse_detection(&getCircle::RANSAC_thread, this, contours[0], &minEllipse[0], &P1, &P2, this->RANSAC_iterations);
-	RANSAC_thread(contours[0], &minEllipse[0], &P1, &P2, RANSAC_iterations);
-    ellipsePublisher(&src, &P1, &P2, &minEllipse[0]);
-
+#ifdef RANSAC_ellipse
+ 	RANSAC_thread(contours[0], &minEllipse[0], &P1, &P2, RANSAC_iterations);
+#endif
+	ellipsePublisher(&src, &P1, &P2, &minEllipse[0]);
    }
 
-  //return &mask;
+
+
 }
 
 //this is not used for the moment
@@ -216,7 +215,7 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    //cout<<"position_z:"<<ellipse_direction.vector<<endl;
+    cout<<"position_z:"<<ellipse_direction.vector<<endl;
 
     //Show your results
       // Draw contours + rect + ellipse

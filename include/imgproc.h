@@ -28,6 +28,8 @@ using namespace cv;
 #include <string>
 #include <map>
 #define pi 3.141592653589
+#define show_images
+#define RANSAC_ellipse
 
 class getCircle : public nodelet::Nodelet
 {
@@ -45,6 +47,8 @@ class getCircle : public nodelet::Nodelet
 	  int dilation_size;
 	  int dilation_elem;
 	  int erosion_elem;
+	  string color1;
+	  string color2;
 	  RNG rng;
 	  ros::Publisher ellipse_pos_pub_;
 	  geometry_msgs::Vector3Stamped ellipse_direction;
@@ -54,7 +58,7 @@ class getCircle : public nodelet::Nodelet
       void Dilation(const Mat& src);
       void Moprh(const Mat& src);
       Mat FilterColors(const Mat& src);
-      void getColor(cv::Mat srchsv, cv::Mat &src, string color, vector<RotatedRect>& minEllipse);
+      void getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse);
       void ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse);
       void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
 

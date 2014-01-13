@@ -12,6 +12,8 @@ erosion_size: 3
 dilation_size: 3
 dilation_elem: 0
 erosion_elem: 0
+color1: "green"
+color2: "red"
 
 
 
