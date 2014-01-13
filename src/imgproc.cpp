@@ -56,7 +56,7 @@ void getCircle::Moprh(const Mat& src)
 }
 
 
-void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse)
+void getCircle::getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse)
 {
 
 
@@ -69,14 +69,16 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, str
   {
   case 1:
 	  inRange(srchsv, Scalar(28, 30, 30),
-		                Scalar(40, 240, 240), srchsv);
+		                Scalar(40, 240, 240), contour_img);
 	//green good Scalar(38, 30, 30), Scalar(50, 240, 240)//handheld
 	//inRange(hsv, Scalar(30, 30, 30), Scalar(40, 240, 240), mask); green circle;
       break;
   case 2:
     // Center around HSV(23,31,20)
-	  inRange(srchsv, Scalar(9, 50, 38),
-		                Scalar(21, 116, 76), srchsv);//violet values
+	  //inRange(srchsv, Scalar(9, 50, 38),
+		//                Scalar(21, 116, 76), contour_img);//violet values
+	  inRange(srchsv, Scalar(0, 50, 38),
+		                Scalar(40, 116, 76), contour_img);//violet values
 	 //Scalar(0,20, 20), Scalar(10, 255, 255);//red good
      break;
   case 3:
@@ -86,14 +88,13 @@ void getCircle::getColor(cv::Mat srchsv, cv::Mat &src, cv::Mat &contour_img, str
 		cout << "Invalid Selection. Please try Again." << endl;
   }
 
-   Moprh(srchsv);
-   GaussianBlur(srchsv, srchsv, Size(7,7), 0, 0);//smooth the image
+   Moprh(contour_img);
+   GaussianBlur(contour_img, contour_img, Size(7,7), 0, 0);//smooth the image
    //Contour definiton
    vector<vector<Point> > contours;
    vector<Vec4i> hierarchy;
-   findContours( srchsv, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
-   // Draw contours
-   drawContours(contour_img, contours, -1, Scalar(255,255,255));
+   findContours( contour_img, contours, hierarchy, CV_RETR_TREE, CV_CHAIN_APPROX_SIMPLE, Point(0, 0) );
+
    //ellipse fitting problem
    minEllipse.resize( contours.size() );
    for( int i = 0; i < contours.size() ; i++ )

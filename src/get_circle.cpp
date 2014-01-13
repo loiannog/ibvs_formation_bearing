@@ -61,10 +61,10 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      //GaussianBlur(src, src, Size(5,5), 0);//smooth the image
     double secs = ros::Time::now().toSec();
     //convert the image to hsv
-    cv::Mat hsv(src.rows, src.cols, CV_8UC1);
-    cv::Mat hsv2(src.rows, src.cols, CV_8UC1);
-    cv::Mat contour_img1(src.rows, src.cols, CV_8UC3);
-    cv::Mat contour_img2(src.rows, src.cols, CV_8UC3);
+    cv::Mat hsv(src.rows, src.cols, CV_8UC3);
+    cv::Mat hsv2(src.rows, src.cols, CV_8UC3);
+    cv::Mat contour_img1(src.rows, src.cols, CV_8UC1);
+    cv::Mat contour_img2(src.rows, src.cols, CV_8UC1);
 
     cvtColor(src, hsv, CV_BGR2HSV);
 
@@ -95,7 +95,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      cv::imshow("Contours1", contour_img1);
     // namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
     // cv::imshow("Contours2", contour_img2);
-     cv::waitKey(1);
+     cv::waitKey(0);
     #endif
 
 
