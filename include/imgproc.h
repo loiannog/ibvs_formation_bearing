@@ -47,6 +47,7 @@ class getCircle : public nodelet::Nodelet
 	  int dilation_size;
 	  int dilation_elem;
 	  int erosion_elem;
+	  double cylinder_size;
 	  string color1;
 	  string color2;
 	  RNG rng;

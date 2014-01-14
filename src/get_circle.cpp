@@ -39,6 +39,7 @@ void getCircle::onInit(void)
 	priv_nh.param<int>("erosion_elem", erosion_elem, 0);//Surface of a dot to search in an area.
 	priv_nh.param<string>("color1", color1, "green");//Surface of a dot to search in an area.
 	priv_nh.param<string>("color2", color2, "red");//Surface of a dot to search in an area.
+	priv_nh.param<double>("cylinder_size", cylinder_size, 0.1);//Surface of a dot to search in an area.
 
     image_transport::ImageTransport it(priv_nh);
     image_ellipse = it.advertise("/QuadrotorGolf/ellipse", 1);
@@ -71,10 +72,10 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     //getColor(src, getColor_from_img);//get the color red
     vector<RotatedRect> minEllipse_color1;
     vector<RotatedRect> minEllipse_color2;
-    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, "violet", minEllipse_color1);
-    //boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, "green", minEllipse_color2);
+    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, color1, minEllipse_color1);
+    boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, color2, minEllipse_color2);
     thread_getColor_1.join();
-    //thread_getColor_2.join();
+    thread_getColor_2.join();
     //publish bearings
     cout<<"total time:"<<(ros::Time::now().toSec()-secs)<<endl;
 
@@ -97,7 +98,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      cv::imshow("Contours1", contour_img1);
     // namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
     // cv::imshow("Contours2", contour_img2);
-     cv::waitKey(0);
+     cv::waitKey(1);
     #endif
 
 
