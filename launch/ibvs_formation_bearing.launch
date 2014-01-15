@@ -1,5 +1,7 @@
 <launch>
- <!-- <group ns="nanoplus">
+  <arg name="model" />
+
+ <group ns="$(arg model)">
     <node pkg="nodelet"
       type="nodelet"
       name="image_zeromq_to_ros"
@@ -10,14 +12,14 @@
       <param name="jpeg_decompress" value="true"/>
       <param name="image_channels" value="1"/>
     </node>
-  </group>-->
+  </group>
   <node pkg="nodelet"
         type="nodelet"
         name="getCircle"
         args="standalone circle_detection/getCircle"
         output="screen">
          <rosparam file="$(find ibvs_formation_bearing)/Params.yaml"/>
-    <remap from="~image" to="/nanoplus/image_zeromq_to_ros/image_raw"/>
+    <remap from="~image" to="/$(arg model)/image_zeromq_to_ros/image_raw"/>
     <remap from="~camera_info" to="/image_zeromq_to_ros/camera_info"/>
   </node>
 </launch>
