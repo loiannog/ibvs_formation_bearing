@@ -80,13 +80,13 @@ double secs_morph = ros::Time::now().toSec();
   case 2:
 
 	  inRange(srchsv, Scalar(0, 50, 38),
-		                Scalar(60, 116, 76), contour_img);//brown values
+		                Scalar(60, 116, 76), contour_img);//violet values 8-17
 
 	 //Scalar(0,20, 20), Scalar(10, 255, 255);//red good
      break;
   case 3:
-	  inRange(srchsv, Scalar(0, 50, 38),
-		                Scalar(30, 116, 76), contour_img);//brown values
+	  inRange(srchsv, Scalar(0, 170, 64),
+		                Scalar(12, 191, 95), contour_img);//brown values
       break;
 	default:
 		cout << "Invalid Selection. Please try Again." << endl;
