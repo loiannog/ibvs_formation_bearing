@@ -15,7 +15,7 @@
   </group>
   <node pkg="nodelet"
         type="nodelet"
-        name="getCircle"
+        name="$(arg model)"
         args="standalone circle_detection/getCircle"
         output="screen">
          <rosparam file="$(find ibvs_formation_bearing)/Params.yaml"/>

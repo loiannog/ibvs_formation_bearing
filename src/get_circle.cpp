@@ -42,9 +42,9 @@ void getCircle::onInit(void)
 	priv_nh.param<double>("cylinder_size", cylinder_size, 0.1);//Surface of a dot to search in an area.
 
     image_transport::ImageTransport it(priv_nh);
-    image_ellipse = it.advertise("/QuadrotorGolf/ellipse", 1);
+    image_ellipse = it.advertise("ellipse", 1);
 
-    ellipse_pos_pub_ = priv_nh.advertise<ibvs_formation_bearing::bearing>("/bearings",
+    ellipse_pos_pub_ = priv_nh.advertise<ibvs_formation_bearing::bearing>("bearings",
                                                                     5);
     ros::Subscriber sub = priv_nh.subscribe("image", 1,  &getCircle::camera_callback, this);
 
