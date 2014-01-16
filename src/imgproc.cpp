@@ -70,10 +70,10 @@ double secs_morph = ros::Time::now().toSec();
   {
 
   case 1:
-	  //inRange(srchsv, Scalar(28, 30, 30),
-		              // Scalar(40, 240, 240), contour_img);//green values
-	  inRange(srchsv, Scalar(28, 70, 38),
-		               Scalar(40, 116, 76), contour_img);//green values
+	  inRange(srchsv, Scalar(28, 30, 30),
+		               Scalar(40, 240, 240), contour_img);//green values
+	  //inRange(srchsv, Scalar(28, 70, 38),
+	//	               Scalar(40, 116, 76), contour_img);//green values
 	  //green good Scalar(38, 30, 30), Scalar(50, 240, 240)//handheld
 	//inRange(hsv, Scalar(30, 30, 30), Scalar(40, 240, 240), mask); green circle;
       break;
