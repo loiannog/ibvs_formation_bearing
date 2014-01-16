@@ -84,8 +84,8 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipse_pos_pub_.publish(ellipses);
     //publish the image
     cv_bridge::CvImage cv_ptr;
-    cv_ptr.encoding = sensor_msgs::image_encodings::MONO8;
-    cv_ptr.image = contour_img1.clone();
+    cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
+    cv_ptr.image = src.clone();
     image_ellipse.publish(cv_ptr.toImageMsg());
     cout<<"total time image included:"<<(ros::Time::now().toSec()-secs)<<endl;
 

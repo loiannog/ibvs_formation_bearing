@@ -79,8 +79,8 @@ double secs_morph = ros::Time::now().toSec();
       break;
   case 2:
 
-	  inRange(srchsv, Scalar(0, 50, 38),
-		                Scalar(60, 116, 76), contour_img);//violet values 8-17
+	  inRange(srchsv, Scalar(8,40, 8),
+		                Scalar(20, 126, 86), contour_img);//violet values 8-17
 
 	 //Scalar(0,20, 20), Scalar(10, 255, 255);//red good
      break;
