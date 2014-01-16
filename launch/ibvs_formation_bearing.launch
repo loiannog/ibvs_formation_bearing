@@ -2,7 +2,7 @@
   <arg name="model" />
 
   <group ns="$(arg model)">
-
+    
     <node pkg="nodelet"
       type="nodelet"
       name="image_zeromq_to_ros"
@@ -15,15 +15,16 @@
       <param name="image_width" value="752"/>
       <param name="image_height" value="480"/>
     </node>
-  </group> 
- 
-  <node pkg="nodelet"
-    type="nodelet"
-    name="getCircle"
-    args="standalone circle_detection/getCircle"
-    output="screen">
-    <rosparam file="$(find ibvs_formation_bearing)/Params.yaml"/>
-    <remap from="~image" to="$(arg model)/image_zeromq_to_ros/image_raw"/>
-    <remap from="~camera_info" to="$(arg model)/image_zeromq_to_ros/camera_info"/>
-  </node>
+
+    <node pkg="nodelet"
+      type="nodelet"
+      name="getCircle"
+      args="standalone circle_detection/getCircle"
+      output="screen">
+      <rosparam file="$(find ibvs_formation_bearing)/Params.yaml"/>
+      <remap from="~image" to="/$(arg model)/image_zeromq_to_ros/image_raw"/>
+      <remap from="~camera_info" to="/$(arg model)/image_zeromq_to_ros/camera_info"/>
+    </node>
+
+  </group>
 </launch>
