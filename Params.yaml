@@ -12,11 +12,27 @@ erosion_size: 3
 dilation_size: 3
 dilation_elem: 0
 erosion_elem: 0
-color1: "violet"
+color1: "green"
 color2: "violet"
 cylinder_size: 0.15
-
-
+color11_low: 28
+color12_low: 80
+color13_low: 20
+color21_low: 8
+color22_low: 40
+color32_low: 25
+color31_low: 0
+color32_low: 170
+color33_low: 64
+color11_high: 40
+color12_high: 180
+color13_high: 180
+color21_high: 20
+color22_high: 126
+color32_high: 86
+color31_high: 12
+color32_high: 191
+color33_high: 95
 
 #[image]
 

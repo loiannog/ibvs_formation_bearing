@@ -56,7 +56,7 @@ void getCircle::Moprh(const Mat& src)
 }
 
 
-void getCircle::getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse)
+void getCircle::getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse, vector<double>* bearing)
 {
 
 
@@ -70,8 +70,10 @@ double secs_morph = ros::Time::now().toSec();
   {
 
   case 1:
-	  inRange(srchsv, Scalar(28, 30, 30),
-		               Scalar(40, 240, 240), contour_img);//green values
+	  //inRange(srchsv, Scalar(28, 30, 30),
+		//               Scalar(40, 240, 240), contour_img);//green values
+	  inRange(srchsv, Scalar(color11_low, color12_low, color13_low),
+		               Scalar(color11_high, color12_high, color13_high), contour_img);//green values
 	  //inRange(srchsv, Scalar(28, 70, 38),
 	//	               Scalar(40, 116, 76), contour_img);//green values
 	  //green good Scalar(38, 30, 30), Scalar(50, 240, 240)//handheld
@@ -79,20 +81,21 @@ double secs_morph = ros::Time::now().toSec();
       break;
   case 2:
 
-	  inRange(srchsv, Scalar(8,40, 8),
-		                Scalar(20, 126, 86), contour_img);//violet values 8-17
-
+	 // inRange(srchsv, Scalar(8,40, 8),
+		//                Scalar(20, 126, 86), contour_img);//violet values 8-17
+	  inRange(srchsv, Scalar(color21_low, color22_low, color23_low),
+		                Scalar(color21_high, color22_high, color23_high), contour_img);//violet values 8-17
 	 //Scalar(0,20, 20), Scalar(10, 255, 255);//red good
      break;
   case 3:
-	  inRange(srchsv, Scalar(0, 170, 64),
-		                Scalar(12, 191, 95), contour_img);//brown values
+	  inRange(srchsv, Scalar(color31_low, color32_low, color33_low),
+		                Scalar(color31_high, color32_high, color33_high), contour_img);//brown values
       break;
 	default:
 		cout << "Invalid Selection. Please try Again." << endl;
   }
 
-
+  cv::imshow("color_extraction", contour_img);
    Moprh(contour_img);
    // cout<<"morph time:"<<(ros::Time::now().toSec()-secs_morph)<<endl;
 
@@ -118,7 +121,7 @@ double secs_find_contour = ros::Time::now().toSec();
           {
        	 minEllipse[i] = fitEllipse( Mat(contours[i]) );//give the ellipse fitting points
        	 //cout<<"width:"<<minEllipse[i].size.width<<endl;
-       	 if(minEllipse[i].size.width  < 20){
+       	 if(minEllipse[i].size.width  < 15){//inser threshold size
 				minEllipse.erase(minEllipse.begin() + i);
 				contours.erase(contours.begin() + i);
        	 }
@@ -132,13 +135,9 @@ double secs_find_contour = ros::Time::now().toSec();
    //RANSAC thread for each ellipse
    if(minEllipse.size()>0 && contours[0].size()>=5){
 #ifdef RANSAC_ellipse
-double secs_ransac = ros::Time::now().toSec();
-
  	RANSAC_thread(contours[0], &minEllipse[0], &P1, &P2, RANSAC_iterations);
-    //cout<<"ransac time:"<<(ros::Time::now().toSec()-secs_ransac)<<endl;
-
 #endif
-	ellipsePublisher(&src, &P1, &P2, &minEllipse[0]);
+	ellipsePublisher(&src, &P1, &P2, &minEllipse[0], bearing);
    }
 
 
@@ -199,7 +198,7 @@ void get_5_random_num(int max_num, int* rand_num)
     }
   }
 }
-void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse){
+void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse, vector<double>* bearing){
     Point2f PM1;//major axis points
     Point2f PM2;//major axis points
     Point2f Pm1;//minor axis points
@@ -231,9 +230,11 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     Point2f diff_dstP = dst_P[2] - dst_P[1];
     double norm_dstP = sqrt(pow(diff_dstP.x,2) + pow(diff_dstP.y,2));
     double ellipse_direction_scale = norm_dstP/cylinder_size;
-    ellipse_direction.vector.x = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    ellipse_direction.vector.y = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    ellipse_direction.vector.z = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+    bearing->at(0) = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+    bearing->at(1) = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+    bearing->at(2) = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
+
+
     //cout<<"position_z:"<<ellipse_direction.vector<<endl;
 
     //Show your results

@@ -28,7 +28,7 @@ using namespace cv;
 #include <string>
 #include <map>
 #define pi 3.141592653589
-//#define show_images
+#define show_images
 #define RANSAC_ellipse
 
 class getCircle : public nodelet::Nodelet
@@ -50,17 +50,36 @@ class getCircle : public nodelet::Nodelet
 	  double cylinder_size;
 	  string color1;
 	  string color2;
+	  int color11_low;
+	  int color12_low;
+	  int color13_low;
+	  int color21_low;
+	  int color22_low;
+	  int color23_low;
+	  int color31_low;
+	  int color32_low;
+	  int color33_low;
+	  int color11_high;
+	  int color12_high;
+	  int color13_high;
+	  int color21_high;
+	  int color22_high;
+	  int color23_high;
+	  int color31_high;
+	  int color32_high;
+	  int color33_high;
+
 	  RNG rng;
 	  ros::Publisher ellipse_pos_pub_;
-	  geometry_msgs::Vector3Stamped ellipse_direction;
+	  ibvs_formation_bearing::bearing ellipses;
       image_transport::Publisher image_ellipse;
 
       void Erosion(const Mat& src);
       void Dilation(const Mat& src);
       void Moprh(const Mat& src);
       Mat FilterColors(const Mat& src);
-      void getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse);
-      void ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse);
+      void getColor(cv::Mat &srchsv, cv::Mat &src, cv::Mat &contour_img, string color, vector<RotatedRect>& minEllipse, vector<double>* bearing);
+      void ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>* P2, RotatedRect* minEllipse, vector<double>* bearing);
       void RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num);
 
  private:

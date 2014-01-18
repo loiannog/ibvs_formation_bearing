@@ -40,6 +40,24 @@ void getCircle::onInit(void)
 	priv_nh.param<string>("color1", color1, "green");//Surface of a dot to search in an area.
 	priv_nh.param<string>("color2", color2, "red");//Surface of a dot to search in an area.
 	priv_nh.param<double>("cylinder_size", cylinder_size, 0.1);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color11_low", color11_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color12_low", color12_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color13_low", color13_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color21_low", color21_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color22_low", color22_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color23_low", color23_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color31_low", color31_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color32_low", color32_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color33_low", color33_low, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color11_high", color11_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color12_high", color12_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color13_high", color13_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color21_high", color21_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color22_high", color22_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color23_high", color23_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color31_high", color31_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color32_high", color32_high, 0);//Surface of a dot to search in an area.
+	priv_nh.param<int>("color33_high", color33_high, 0);//Surface of a dot to search in an area.
 
     image_transport::ImageTransport it(priv_nh);
     image_ellipse = it.advertise("ellipse", 1);
@@ -63,7 +81,6 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     double secs = ros::Time::now().toSec();
     //convert the image to hsv
     cv::Mat hsv(src.rows, src.cols, CV_8UC3);
-    cv::Mat hsv2(src.rows, src.cols, CV_8UC3);
     cv::Mat contour_img1(src.rows, src.cols, CV_8UC1);
     cv::Mat contour_img2(src.rows, src.cols, CV_8UC1);
 
@@ -72,16 +89,39 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     //getColor(src, getColor_from_img);//get the color red
     vector<RotatedRect> minEllipse_color1;
     vector<RotatedRect> minEllipse_color2;
-    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, color1, minEllipse_color1);
+	vector<double> bearing1(3);
+	vector<double> bearing2(3);
+	geometry_msgs::Vector3Stamped ellipse_direction1;
+	geometry_msgs::Vector3Stamped ellipse_direction2;
+
+    boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, color1, minEllipse_color1, &bearing1);
     // boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, color2, minEllipse_color2);
     thread_getColor_1.join();
     // thread_getColor_2.join();
+
     //publish bearings
     cout<<"total time:"<<(ros::Time::now().toSec()-secs)<<endl;
-
-    ibvs_formation_bearing::bearing ellipses;
-    ellipses.bearings.push_back(ellipse_direction);
+    ellipses.bearings.clear();
+    ellipses.color.clear();
+    ellipses.bearings.resize(2);
+    ellipses.color.resize(2);
+    if(bearing1[0]!=NULL && bearing1[1]!=NULL && bearing1[2]!=NULL){
+    ellipses.bearings[0].vector.x = bearing1[0];
+    ellipses.bearings[0].vector.y = bearing1[1];
+    ellipses.bearings[0].vector.z = bearing1[2];
+    ellipses.bearings.push_back(ellipse_direction1);
+    ellipses.color[0] = color1;
+    }
+    if(bearing2[0]!=NULL && bearing2[1]!=NULL && bearing2[2]!=NULL){
+    ellipses.bearings[1].vector.x = bearing2[0];
+    ellipses.bearings[1].vector.y = bearing2[1];
+    ellipses.bearings[1].vector.z = bearing2[2];
+    ellipses.bearings.push_back(ellipse_direction2);
+    ellipses.color[1] = color2;
+    }
+    if(ellipses.bearings.size() == 1)
     ellipse_pos_pub_.publish(ellipses);
+
     //publish the image
     cv_bridge::CvImage cv_ptr;
     cv_ptr.encoding = sensor_msgs::image_encodings::BGR8;
@@ -94,11 +134,11 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      //cv::imshow("Color Extraction", getColor_from_img);
      namedWindow( "Ellipse Fitting", CV_WINDOW_AUTOSIZE );
      imshow( "Ellipse Fitting", src );
-     namedWindow( "Contours1", CV_WINDOW_AUTOSIZE );
-     cv::imshow("Contours1", contour_img1);
+     //namedWindow( "Contours1", CV_WINDOW_AUTOSIZE );
+     //cv::imshow("Contours1", contour_img1);
     // namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
     // cv::imshow("Contours2", contour_img2);
-     cv::waitKey(1);
+     cv::waitKey(0);
     #endif
 
 
