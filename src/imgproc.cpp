@@ -97,7 +97,8 @@ double secs_morph = ros::Time::now().toSec();
 
   //cv::imshow("color_extraction", contour_img);
    Moprh(contour_img);
-   // cout<<"morph time:"<<(ros::Time::now().toSec()-secs_morph)<<endl;
+    cout<<"morph time:"<<(ros::Time::now().toSec()-secs_morph)<<endl;
+   //cv::imshow("after cleaning", contour_img);
 
 double secs_gaussian = ros::Time::now().toSec();
 

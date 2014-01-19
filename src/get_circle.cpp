@@ -95,9 +95,9 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
 	geometry_msgs::Vector3Stamped ellipse_direction2;
 
     boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, color1, minEllipse_color1, &bearing1);
-    // boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, color2, minEllipse_color2);
+    boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, color2, minEllipse_color2, &bearing2);
     thread_getColor_1.join();
-    // thread_getColor_2.join();
+    thread_getColor_2.join();
 
     //publish bearings
     cout<<"total time:"<<(ros::Time::now().toSec()-secs)<<endl;
@@ -138,7 +138,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
      //cv::imshow("Contours1", contour_img1);
     // namedWindow( "Contours2", CV_WINDOW_AUTOSIZE );
     // cv::imshow("Contours2", contour_img2);
-     cv::waitKey(0);
+     cv::waitKey(1);
     #endif
 
 
