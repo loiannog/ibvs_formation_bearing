@@ -95,7 +95,7 @@ double secs_morph = ros::Time::now().toSec();
 		cout << "Invalid Selection. Please try Again." << endl;
   }
 
-  cv::imshow("color_extraction", contour_img);
+  //cv::imshow("color_extraction", contour_img);
    Moprh(contour_img);
    // cout<<"morph time:"<<(ros::Time::now().toSec()-secs_morph)<<endl;
 
