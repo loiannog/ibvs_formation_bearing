@@ -3,7 +3,7 @@
 
   <group ns="$(arg model)">
     
-   <!-- <node pkg="nodelet"
+    <node pkg="nodelet"
       type="nodelet"
       name="image_zeromq_to_ros"
       args="standalone image_zeromq_to_ros/ImageZeroMQToROS"
@@ -14,7 +14,7 @@
       <param name="image_channels" value="3"/>
       <param name="image_width" value="752"/>
       <param name="image_height" value="480"/>
-    </node>-->
+    </node>
 
     <node pkg="nodelet"
       type="nodelet"
