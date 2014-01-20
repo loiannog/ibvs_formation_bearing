@@ -119,7 +119,7 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipses.bearings.push_back(ellipse_direction2);
     ellipses.color[1] = color2;
     }
-    if(ellipses.bearings.size() == 1)
+    if(ellipses.bearings.size() == 2)
     ellipse_pos_pub_.publish(ellipses);
 
     //publish the image
