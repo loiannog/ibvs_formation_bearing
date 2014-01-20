@@ -109,18 +109,15 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipses.bearings[0].vector.x = bearing1[0];
     ellipses.bearings[0].vector.y = bearing1[1];
     ellipses.bearings[0].vector.z = bearing1[2];
-    ellipses.bearings.push_back(ellipse_direction1);
     ellipses.color[0] = color1;
     }
     if(bearing2[0]!=NULL && bearing2[1]!=NULL && bearing2[2]!=NULL){
     ellipses.bearings[1].vector.x = bearing2[0];
     ellipses.bearings[1].vector.y = bearing2[1];
     ellipses.bearings[1].vector.z = bearing2[2];
-    ellipses.bearings.push_back(ellipse_direction2);
     ellipses.color[1] = color2;
     }
-    cout<<"number_of_ellipses:"<<ellipses.bearings.size()<<endl;
-    if(ellipses.bearings.size() > 0)
+    if(ellipses.bearings.size() == 2)
     ellipse_pos_pub_.publish(ellipses);
 
     //publish the image
