@@ -235,7 +235,6 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     bearing->at(1) = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
     bearing->at(2) = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
 
-
     //cout<<"position_z:"<<ellipse_direction.vector<<endl;
 
     //Show your results

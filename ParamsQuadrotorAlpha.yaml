@@ -16,12 +16,12 @@ color1: "violet"
 color2: "green"
 cylinder_size: 0.13
  
-color11_low: 26
+color11_low: 25
 color12_low: 120
 color13_low: 5
 
-color21_low: 8
-color22_low: 40
+color21_low: 6
+color22_low: 90
 color23_low: 25
 
 color31_low: 6
@@ -30,15 +30,16 @@ color33_low: 30
 
 color11_high: 40
 color12_high: 160
-color13_high: 50
+color13_high: 40
 
 color21_high: 20
-color22_high: 126
-color23_high: 86
+color22_high: 130
+color23_high: 70
 
 color31_high: 10
 color32_high: 190
 color33_high: 90
+
 
 #[image]
 
