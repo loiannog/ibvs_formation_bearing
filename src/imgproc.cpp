@@ -102,7 +102,7 @@ double secs_morph = ros::Time::now().toSec();
 
 double secs_gaussian = ros::Time::now().toSec();
 
-   GaussianBlur(contour_img, contour_img, Size(7,7), 0, 0);//smooth the image
+   GaussianBlur(contour_img, contour_img, Size(3,3), 0, 0);//smooth the image
     //cout<<"gaussian time:"<<(ros::Time::now().toSec()-secs_gaussian)<<endl;
 
    //Contour definiton
