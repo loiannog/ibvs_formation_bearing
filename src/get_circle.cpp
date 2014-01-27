@@ -39,7 +39,7 @@ void getCircle::onInit(void)
 	priv_nh.param<int>("erosion_elem", erosion_elem, 0);//Surface of a dot to search in an area.
 	priv_nh.param<string>("color1", color1, "green");//Surface of a dot to search in an area.
 	priv_nh.param<string>("color2", color2, "red");//Surface of a dot to search in an area.
-	priv_nh.param<double>("cylinder_size", cylinder_size, 0.1);//Surface of a dot to search in an area.
+	priv_nh.param<double>("cylinder_size", cylinder_size, 0.13);//Surface of a dot to search in an area.
 	priv_nh.param<int>("color11_low", color11_low, 0);//Surface of a dot to search in an area.
 	priv_nh.param<int>("color12_low", color12_low, 0);//Surface of a dot to search in an area.
 	priv_nh.param<int>("color13_low", color13_low, 0);//Surface of a dot to search in an area.
