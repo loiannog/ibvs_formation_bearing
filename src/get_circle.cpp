@@ -28,10 +28,14 @@ void getCircle::onInit(void)
 	priv_nh.param<double>("fy", fy, 617.402184);//Surface of a dot to search in an area.
 	priv_nh.param<double>("cx", cx, 395.913754);//Surface of a dot to search in an area.
 	priv_nh.param<double>("cy", cy, 60);//Surface of a dot to search in an area.
-	priv_nh.param<double>("d0", d0, -0.406827);//Surface of a dot to search in an area.
-	priv_nh.param<double>("d1", d1,  0.173936);//Surface of a dot to search in an area.
-	priv_nh.param<double>("d2", d2, -6.1e-05);//Surface of a dot to search in an area.
-	priv_nh.param<double>("d3", d3, -0.002139);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d0", d0, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d1", d1, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d2", d2, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d3", d3, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d4", d4, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d5", d5, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d6", d6, 0);//Surface of a dot to search in an area.
+	priv_nh.param<double>("d7", d7, 0);//Surface of a dot to search in an area.
 	priv_nh.param<int>("RANSAC_iterations", RANSAC_iterations, 4400);//RANSAC iterations
 	priv_nh.param<int>("erosion_size", erosion_size, 3);//Surface of a dot to search in an area.
 	priv_nh.param<int>("dilation_size", dilation_size, 3);//Surface of a dot to search in an area.
@@ -76,7 +80,10 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
   cv::Mat src(cv::Size(img->width, img->height), CV_8UC3,
               const_cast<uchar*>(&img->data[0]), img->step);//3 channels image
   
-
+  //cv::Mat img_temp = src.clone();
+  //const cv:: Mat cM = (cv::Mat_<double>(3,3) << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0);
+  //const cv:: Mat Dl = (cv::Mat_<double>(8,1) << d0, d1, d2, d3, d4, d5 ,d6 ,d7);
+  //undistort(img_temp, src, cM, Dl);
      //GaussianBlur(src, src, Size(5,5), 0);//smooth the image
     double secs = ros::Time::now().toSec();
     //convert the image to hsv
@@ -95,9 +102,9 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
 	geometry_msgs::Vector3Stamped ellipse_direction2;
 
     boost::thread thread_getColor_1(&getCircle::getColor, this, hsv, src, contour_img1, color1, minEllipse_color1, &bearing1);
-    boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, color2, minEllipse_color2, &bearing2);
+    //boost::thread thread_getColor_2(&getCircle::getColor, this, hsv, src, contour_img2, color2, minEllipse_color2, &bearing2);
     thread_getColor_1.join();
-    thread_getColor_2.join();
+    //thread_getColor_2.join();
 
     //publish bearings
     cout<<"total time:"<<(ros::Time::now().toSec()-secs)<<endl;

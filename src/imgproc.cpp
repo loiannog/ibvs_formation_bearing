@@ -96,13 +96,13 @@ double secs_morph = ros::Time::now().toSec();
   }
 
   //cv::imshow("color_extraction", contour_img);
-   Moprh(contour_img);
+    Moprh(contour_img);
     cout<<"morph time:"<<(ros::Time::now().toSec()-secs_morph)<<endl;
-   //cv::imshow("after cleaning", contour_img);
+   //cv::imshow("after distortion", contour_img);
 
 double secs_gaussian = ros::Time::now().toSec();
 
-   GaussianBlur(contour_img, contour_img, Size(3,3), 0, 0);//smooth the image
+   //GaussianBlur(contour_img, contour_img, Size(3,3), 0, 0);//smooth the image
     //cout<<"gaussian time:"<<(ros::Time::now().toSec()-secs_gaussian)<<endl;
 
    //Contour definiton
@@ -135,9 +135,9 @@ double secs_find_contour = ros::Time::now().toSec();
 
    //RANSAC thread for each ellipse
    if(minEllipse.size()>0 && contours[0].size()>=5){
-#ifdef RANSAC_ellipse
+
  	RANSAC_thread(contours[0], &minEllipse[0], &P1, &P2, RANSAC_iterations);
-#endif
+
 	ellipsePublisher(&src, &P1, &P2, &minEllipse[0], bearing);
    }
 
@@ -226,15 +226,15 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
     P[1] = PM1;
     P[2] = PM2;
     const cv:: Mat cM = (cv::Mat_<double>(3,3) << fx, 0.0, cx, 0.0, fy, cy, 0.0, 0.0, 1.0);
-    const cv:: Mat Dl = (cv::Mat_<double>(4,1) << d0, d1, d2, d3);
+    const cv:: Mat Dl = (cv::Mat_<double>(8,1) << d0, d1, d2, d3, d4, d5 ,d6 ,d7);
     undistortPoints(P, dst_P, cM, Dl);
     Point2f diff_dstP = dst_P[2] - dst_P[1];
     double norm_dstP = sqrt(pow(diff_dstP.x,2) + pow(diff_dstP.y,2));
     double ellipse_direction_scale = norm_dstP/cylinder_size;
-    bearing->at(0) = dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    bearing->at(1) = dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-    bearing->at(2) = 1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1)/ellipse_direction_scale;
-
+    bearing->at(0) = (dst_P[0].x/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1))/ellipse_direction_scale;
+    bearing->at(1) = (dst_P[0].y/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1))/ellipse_direction_scale;
+    bearing->at(2) = (1/sqrt(pow(dst_P[0].x,2) + pow(dst_P[0].y,2) + 1))/ellipse_direction_scale;
+    cout<<"norm"<<1/ellipse_direction_scale<<endl;
     //cout<<"position_z:"<<ellipse_direction.vector<<endl;
 
     //Show your results
@@ -260,7 +260,7 @@ void getCircle::ellipsePublisher(Mat* src, vector<Point2f>* P1, vector<Point2f>*
 //class RANSAC thread functions
 void getCircle::RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, vector<Point2f>* P1, vector<Point2f>* P2, int sample_num)
 {
-
+#ifdef RANSAC_ellipse
 
 		//Ransac adaptive version just defined in the first ellipse
 		    int ep_num = 5;//minimum point number to estimate the ellipse
@@ -375,7 +375,7 @@ void getCircle::RANSAC_thread(vector<Point> contours, RotatedRect* minEllipse, v
 
 		    *minEllipse = fitEllipse( Mat(contours_opt) );//give the ellipse fitting points
 
-
+#endif
 		    //compute the axis of the major axis
 		    double m0 = tan(minEllipse->angle*pi/180);
 		    double b0 = minEllipse->center.y - m0*minEllipse->center.x;
