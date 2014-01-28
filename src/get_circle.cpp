@@ -8,6 +8,7 @@
 #include <imgproc.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
+#include <limits>
 
 #include <math.h>
 #include <iostream>
@@ -114,14 +115,14 @@ void getCircle::camera_callback(const sensor_msgs::Image::ConstPtr &img)
     ellipses.color.resize(2);
     bool bearing_1 = false;
     bool bearing_2 = false;
-    if(bearing1[0]!=NULL && bearing1[1]!=NULL && bearing1[2]!=NULL){
+    if(bearing1[0]!=NULL && bearing1[1]!=NULL && bearing1[2]!=NULL && bearing1[0]!= numeric_limits<double>::infinity( ) && bearing1[1]!= numeric_limits<double>::infinity( ) && bearing1[2]!= numeric_limits<double>::infinity( )){
     ellipses.bearings[0].vector.x = bearing1[0];
     ellipses.bearings[0].vector.y = bearing1[1];
     ellipses.bearings[0].vector.z = bearing1[2];
     ellipses.color[0] = color1;
     bearing_1 = true;
     }
-    if(bearing2[0]!=NULL && bearing2[1]!=NULL && bearing2[2]!=NULL){
+    if(bearing2[0]!=NULL && bearing2[1]!=NULL && bearing2[2]!=NULL && bearing2[0]!= numeric_limits<double>::infinity( ) && bearing2[1]!= numeric_limits<double>::infinity( ) && bearing2[2]!= numeric_limits<double>::infinity( )){
     ellipses.bearings[1].vector.x = bearing2[0];
     ellipses.bearings[1].vector.y = bearing2[1];
     ellipses.bearings[1].vector.z = bearing2[2];
